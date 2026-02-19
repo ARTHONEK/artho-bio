@@ -1,29 +1,31 @@
-// Настройки
+// Настройки даты рождения
 const BIRTH_DATE = "2006-05-27";
 
-// Расчет возраста
+// Функция расчета и вывода возраста
 function updateAge() {
     const today = new Date();
     const birth = new Date(BIRTH_DATE);
     let age = today.getFullYear() - birth.getFullYear();
     const m = today.getMonth() - birth.getMonth();
+    
     if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
         age--;
     }
     
-    // Склонение слова "лет"
     let suffix = 'лет';
     let count = age % 100;
+    
     if (!(count >= 5 && count <= 20)) {
         count = count % 10;
         if (count === 1) suffix = 'год';
         else if (count >= 2 && count <= 4) suffix = 'года';
     }
     
-    document.getElementById('age').innerText = `${age} ${suffix}`;
+    const ageElement = document.getElementById('age');
+    if(ageElement) ageElement.innerText = `${age} ${suffix}`;
 }
 
-// Управление галереей
+// Настройка кликов по картинкам во всех галереях
 function initGallery() {
     const lightbox = document.getElementById('lightbox');
     const lightboxImg = document.getElementById('lightbox-img');
@@ -36,7 +38,7 @@ function initGallery() {
     });
 }
 
-// Запуск при загрузке
+// Загрузка
 document.addEventListener('DOMContentLoaded', () => {
     updateAge();
     initGallery();

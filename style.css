@@ -64,6 +64,13 @@ h1 { font-size: 1.4rem; margin: 10px 0 5px; transition: 0.3s; }
     margin-bottom: 25px;
 }
 
+.achievements-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
 .gallery-item {
     aspect-ratio: 1 / 1;
     background: var(--card-bg);
@@ -72,6 +79,10 @@ h1 { font-size: 1.4rem; margin: 10px 0 5px; transition: 0.3s; }
     cursor: pointer;
     transition: transform 0.3s ease;
     border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.achievements-grid .gallery-item {
+    aspect-ratio: 1.4 / 1;
 }
 
 .gallery-item:hover { transform: scale(1.05); border-color: var(--accent-color); }
@@ -99,7 +110,7 @@ h1 { font-size: 1.4rem; margin: 10px 0 5px; transition: 0.3s; }
     letter-spacing: 0.5px;
 }
 
-/* Глитч эффекты */
+/* Глитч анимации */
 @keyframes glitch {
     0% { transform: translate(0); }
     20% { transform: translate(-2px, 2px); }
