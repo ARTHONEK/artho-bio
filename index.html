@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bio | Artho</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <img src="pfp.jpg" alt="Avatar" class="profile-img">
+        
+        <h1>Artho/Arthonek</h1>
+        <p class="bio-text">просто случайный протоген из Нижнего Новгорода</p>
+
+        <div class="info-block">
+            Привет! Меня зовут <span>Артур</span>, мне <span id="age">...</span>. Живу в Нижнем Новгороде. 
+            В фурри-сообществе нахожусь примерно с осени 2023 года. 
+            Обычно меня можно встретить под ником Artho. Рад знакомству!
+        </div>
+
+        <div class="gallery-title">Галерея персонажа</div>
+        <div class="gallery-grid">
+            <div class="gallery-item"><img src="1.jpg" alt="Art 1"></div>
+            <div class="gallery-item"><img src="2.jpg" alt="Art 2"></div>
+            <div class="gallery-item"><img src="3.jpg" alt="Art 3"></div>
+            <div class="gallery-item"><img src="4.jpg" alt="Art 4"></div>
+            <div class="gallery-item"><img src="5.jpg" alt="Art 5"></div>
+            <div class="gallery-item"><img src="6.jpg" alt="Art 6"></div>
+            <div class="gallery-item"><img src="7.png" alt="Art 7"></div>
+            <div class="gallery-item"><img src="8.jpg" alt="Art 8"></div>
+            <div class="gallery-item"><img src="9.jpg" alt="Art 9"></div>
+        </div>
+
+        <div class="links">
+            <a href="https://t.me/sikretplaceovartho" target="_blank" class="link-card">📸 все арты с моими персонажами</a>
+            <a href="https://t.me/prootis" target="_blank" class="link-card">✈️ личный тгк</a>
+            <a href="https://t.me/arthonek" target="_blank" class="link-card">☕️ лс телеграма</a>
+            <a href="https://proto-map.vercel.app/profile/ARTHO" target="_blank" class="link-card">🥀 профиль Protomap</a>
+        </div>
+
+        <footer class="ai-credit">
+            Сделано при поддержке Gemini AI
+        </footer>
+    </div>
+
+    <div id="lightbox" onclick="this.style.display='none'">
+        <img id="lightbox-img" src="" alt="Full View">
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
