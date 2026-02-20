@@ -133,27 +133,30 @@ h1:hover { text-shadow: 2px 0 #ff00c1, -2px 0 #00fff9; animation: glitch 0.4s sk
     justify-content: center; align-items: center;
 }
 #lightbox img { max-width: 90%; max-height: 85%; border-radius: 8px; }
-/* Пасхалка с Моаи */
+/* Пасхалка с Моаи - исправлено */
 .easter-egg-zone {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 50px; /* Размер зоны в углу */
-    height: 50px;
-    z-index: 9999;
+    position: fixed !important; /* Принудительно фиксируем */
+    top: 0 !important;
+    left: 0 !important;
+    width: 60px;
+    height: 60px;
+    z-index: 10000; /* Выше всех элементов */
     display: flex;
     justify-content: center;
     align-items: center;
     text-decoration: none;
-    font-size: 0; /* Прячем эмодзи изначально */
+    background: transparent;
+    color: transparent; /* Делаем текст прозрачным */
+    font-size: 2rem;
     transition: all 0.3s ease;
-    cursor: default;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent; /* Убираем синий квадрат при тапе на Android */
 }
 
-/* При наведении или когда добавлен класс 'active' через JS */
+/* При наведении или активации через класс */
 .easter-egg-zone:hover, 
 .easter-egg-zone.visible {
-    font-size: 2rem;
-    background: rgba(255, 255, 255, 0.1);
-    border-bottom-right-radius: 15px;
+    color: rgba(255, 255, 255, 1); /* Проявляем цвет */
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom-right-radius: 20px;
 }
