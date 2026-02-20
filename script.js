@@ -43,3 +43,26 @@ document.addEventListener('DOMContentLoaded', () => {
     updateAge();
     initGallery();
 });
+function initEasterEgg() {
+    const moai = document.getElementById('moai-egg');
+    
+    // Для мобильных устройств: показываем при первом тапе
+    moai.addEventListener('touchstart', function(e) {
+        if (!moai.classList.contains('visible')) {
+            e.preventDefault(); // Отменяем переход по ссылке при первом клике
+            moai.classList.add('visible');
+            
+            // Скрыть обратно через 3 секунды, если не нажали
+            setTimeout(() => {
+                moai.classList.remove('visible');
+            }, 3000);
+        }
+    });
+}
+
+// Добавь запуск функции в основной блок загрузки:
+document.addEventListener('DOMContentLoaded', () => {
+    updateAge();
+    initGallery();
+    initEasterEgg(); // Запускаем пасхалку
+});

@@ -133,3 +133,27 @@ h1:hover { text-shadow: 2px 0 #ff00c1, -2px 0 #00fff9; animation: glitch 0.4s sk
     justify-content: center; align-items: center;
 }
 #lightbox img { max-width: 90%; max-height: 85%; border-radius: 8px; }
+/* Пасхалка с Моаи */
+.easter-egg-zone {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 50px; /* Размер зоны в углу */
+    height: 50px;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    font-size: 0; /* Прячем эмодзи изначально */
+    transition: all 0.3s ease;
+    cursor: default;
+}
+
+/* При наведении или когда добавлен класс 'active' через JS */
+.easter-egg-zone:hover, 
+.easter-egg-zone.visible {
+    font-size: 2rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-bottom-right-radius: 15px;
+}
