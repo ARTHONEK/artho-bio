@@ -1,8 +1,11 @@
 :root {
-    --bg-color: #0f172a;
-    --text-color: #f8fafc;
-    --accent-color: #c084fc; 
-    --card-bg: rgba(255, 255, 255, 0.05);
+    /* Цвета твоего протогена */
+    --bg-color: #0a0a0f;           /* Почти черный, с фиолетовым отливом */
+    --text-color: #e2e8f0;
+    --accent-color: #00ff66;       /* Тот самый зеленый с визора */
+    --accent-glow: rgba(0, 255, 102, 0.3);
+    --card-bg: rgba(20, 20, 30, 0.7);
+    --hex-color: rgba(0, 255, 102, 0.05); /* Цвет сетки гексагонов */
 }
 
 body {
@@ -14,149 +17,213 @@ body {
     align-items: center;
     margin: 0;
     padding: 40px 20px;
+    min-height: 100vh;
+    /* Создаем фон из хексагонов на чистом CSS */
+    background-image: 
+        radial-gradient(circle at center, transparent 0%, var(--bg-color) 70%),
+        linear-gradient(30deg, var(--hex-color) 12%, transparent 12.5%, transparent 87%, var(--hex-color) 87.5%, var(--hex-color)),
+        linear-gradient(-30deg, var(--hex-color) 12%, transparent 12.5%, transparent 87%, var(--hex-color) 87.5%, var(--hex-color)),
+        linear-gradient(30deg, var(--hex-color) 12%, transparent 12.5%, transparent 87%, var(--hex-color) 87.5%, var(--hex-color)),
+        linear-gradient(-30deg, var(--hex-color) 12%, transparent 12.5%, transparent 87%, var(--hex-color) 87.5%, var(--hex-color)),
+        linear-gradient(60deg, rgba(0, 255, 102, 0.03) 25%, transparent 25.5%, transparent 75%, rgba(0, 255, 102, 0.03) 75%, rgba(0, 255, 102, 0.03)),
+        linear-gradient(60deg, rgba(0, 255, 102, 0.03) 25%, transparent 25.5%, transparent 75%, rgba(0, 255, 102, 0.03) 75%, rgba(0, 255, 102, 0.03));
+    background-size: 80px 140px;
 }
 
 .container {
     width: 100%;
     max-width: 450px;
     text-align: center;
+    position: relative;
+    z-index: 1;
 }
 
+/* Аватарка с неоновым кольцом */
 .profile-img {
-    width: 90px;
-    height: 90px;
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
-    border: 2px solid var(--accent-color);
+    border: 3px solid var(--accent-color);
+    box-shadow: 0 0 15px var(--accent-glow);
     margin-bottom: 10px;
     object-fit: cover;
+    transition: 0.3s;
 }
 
-h1 { font-size: 1.4rem; margin: 10px 0 5px; transition: 0.3s; }
-.bio-text { font-size: 0.9rem; opacity: 0.7; margin-bottom: 25px; }
+h1 { 
+    font-size: 1.6rem; 
+    margin: 10px 0 5px; 
+    color: var(--accent-color);
+    text-shadow: 0 0 10px var(--accent-glow);
+}
 
+.bio-text { font-size: 0.9rem; opacity: 0.8; margin-bottom: 25px; }
+
+/* Табы в стиле интерфейса */
+.tabs-menu {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 25px;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 6px;
+    border-radius: 14px;
+    border: 1px solid var(--accent-glow);
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 12px 5px;
+    border: none;
+    background: none;
+    color: var(--text-color);
+    font-size: 0.8rem;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: 0.3s;
+    opacity: 0.6;
+}
+
+.tab-btn.active {
+    background: var(--accent-color);
+    color: #000;
+    opacity: 1;
+    box-shadow: 0 0 10px var(--accent-glow);
+}
+
+/* Инфо-блоки */
 .info-block {
     background: var(--card-bg);
-    border-radius: 12px;
-    padding: 15px;
+    border-radius: 15px;
+    padding: 18px;
     text-align: left;
     font-size: 0.9rem;
-    line-height: 1.5;
-    margin-bottom: 25px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    line-height: 1.6;
+    margin-bottom: 20px;
+    border: 1px solid rgba(0, 255, 102, 0.1);
+    backdrop-filter: blur(5px);
 }
 
 .info-block span { color: var(--accent-color); font-weight: bold; }
 
 .gallery-title {
     text-align: left;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 10px;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
     color: var(--accent-color);
-    font-weight: bold;
+    opacity: 0.9;
 }
 
-.gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin-bottom: 25px;
-}
-
-.achievements-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-    margin-bottom: 25px;
-}
-
-.gallery-item {
-    aspect-ratio: 1 / 1;
-    background: var(--card-bg);
-    border-radius: 8px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.achievements-grid .gallery-item {
-    aspect-ratio: 1.4 / 1;
-}
-
-.gallery-item:hover { transform: scale(1.05); border-color: var(--accent-color); }
-.gallery-item img { width: 100%; height: 100%; object-fit: cover; }
-
+/* Кнопки ссылок */
 .links { display: flex; flex-direction: column; gap: 12px; }
-
 .link-card {
     background: var(--card-bg);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 14px;
+    border: 1px solid rgba(0, 255, 102, 0.15);
+    padding: 15px;
     border-radius: 12px;
     text-decoration: none;
     color: white;
     font-weight: 500;
-    transition: all 0.3s ease;
-}
-
-.link-card:hover { background: rgba(255, 255, 255, 0.1); border-color: var(--accent-color); }
-
-.ai-credit {
-    margin-top: 40px;
-    font-size: 0.7rem;
-    opacity: 0.4;
-    letter-spacing: 0.5px;
-}
-
-/* Глитч анимации */
-@keyframes glitch {
-    0% { transform: translate(0); }
-    20% { transform: translate(-2px, 2px); }
-    40% { transform: translate(-2px, -2px); }
-    60% { transform: translate(2px, 2px); }
-    80% { transform: translate(2px, -2px); }
-    100% { transform: translate(0); }
-}
-
-.profile-img:hover { animation: glitch 0.3s linear infinite; filter: drop-shadow(2px 0 red) drop-shadow(-2px 0 blue); }
-h1:hover { text-shadow: 2px 0 #ff00c1, -2px 0 #00fff9; animation: glitch 0.4s skew infinite; }
-
-/* Lightbox */
-#lightbox {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.9);
-    justify-content: center; align-items: center;
-}
-#lightbox img { max-width: 90%; max-height: 85%; border-radius: 8px; }
-/* Пасхалка с Моаи - исправлено */
-.easter-egg-zone {
-    position: fixed !important; /* Принудительно фиксируем */
-    top: 0 !important;
-    left: 0 !important;
-    width: 60px;
-    height: 60px;
-    z-index: 10000; /* Выше всех элементов */
+    transition: 0.3s;
     display: flex;
     justify-content: center;
     align-items: center;
-    text-decoration: none;
-    background: transparent;
-    color: transparent; /* Делаем текст прозрачным */
-    font-size: 2rem;
-    transition: all 0.3s ease;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent; /* Убираем синий квадрат при тапе на Android */
 }
 
-/* При наведении или активации через класс */
-.easter-egg-zone:hover, 
-.easter-egg-zone.visible {
-    color: rgba(255, 255, 255, 1); /* Проявляем цвет */
-    background: rgba(255, 255, 255, 0.05);
-    border-bottom-right-radius: 20px;
+.link-card:hover { 
+    background: rgba(0, 255, 102, 0.1); 
+    border-color: var(--accent-color);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Галереи */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.gallery-item {
+    aspect-ratio: 1/1;
+    background: var(--card-bg);
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: 0.3s;
+}
+
+.gallery-item:hover { 
+    border-color: var(--accent-color); 
+    box-shadow: 0 0 10px var(--accent-glow);
+}
+
+.gallery-item img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Пасхалка */
+.easter-egg-zone {
+    position: fixed !important;
+    top: 0; left: 0;
+    width: 60px; height: 60px;
+    z-index: 10000;
+    color: transparent;
+    display: flex; justify-content: center; align-items: center;
+    text-decoration: none;
+    transition: 0.3s;
+}
+.easter-egg-zone:hover, .easter-egg-zone.visible {
+    color: var(--accent-color);
+    background: rgba(0, 255, 102, 0.05);
+}
+
+.ai-credit { margin-top: 40px; font-size: 0.7rem; opacity: 0.3; }
+
+/* Анимации */
+.tab-content { display: none; animation: slideUp 0.4s ease; }
+.tab-content.active { display: block; }
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Модальное окно (Lightbox) - ИСПРАВЛЕНО */
+#lightbox {
+    display: none;
+    position: fixed;
+    z-index: 10001;
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    background: rgba(5, 5, 10, 0.95);
+    justify-content: center; 
+    align-items: center;
+    cursor: pointer;
+}
+
+#lightbox img { 
+    max-width: 90%; 
+    max-height: 85vh; /* Ограничение по высоте, чтобы не было гигантского зума */
+    object-fit: contain; /* Картинка всегда вписывается целиком */
+    border: 2px solid var(--accent-color); 
+    border-radius: 10px; 
+    box-shadow: 0 0 20px var(--accent-glow);
+}
+
+/* Стили сетки для блоков */
+.link-card, .tab-btn.active, .info-block {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--card-bg);
+    background-image: 
+        linear-gradient(rgba(0, 255, 102, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 102, 0.05) 1px, transparent 1px);
+    background-size: 15px 15px;
+    border: 1px solid rgba(0, 255, 102, 0.2);
+    backdrop-filter: blur(8px);
 }
