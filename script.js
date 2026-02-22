@@ -205,7 +205,7 @@ async function updateLastFm() {
         
         if (isPlaying) {
             const trackText = `${track.artist['#text']} — ${track.name}`;
-            trackEl.innerText = currentLang === 'ru' ? `Слушаю: ${trackText}` : `Listening to: ${trackText}`;
+            trackEl.innerText = currentLang === 'ru' ? ` ${trackText}` : `Listening to: ${trackText}`;
         } else {
             trackEl.innerText = currentLang === 'ru' ? "Сигнал потерян (Offline)" : "Signal lost (Offline)";
         }
