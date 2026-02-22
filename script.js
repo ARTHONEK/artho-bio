@@ -100,6 +100,7 @@ function toggleLanguage() {
             loadLore(fileName);
         }
     }
+  updateLastFm();
 }
 
 // --- Остальные функции (без изменений, но исправленные) ---
@@ -205,9 +206,9 @@ async function updateLastFm() {
         
         if (isPlaying) {
             const trackText = `${track.artist['#text']} — ${track.name}`;
-            trackEl.innerText = currentLang === 'ru' ? ` ${trackText}` : `Listening to: ${trackText}`;
+            trackEl.innerText = currentLang === 'ru' ? ` ${trackText}` : ` ${trackText}`;
         } else {
-            trackEl.innerText = currentLang === 'ru' ? "Сигнал потерян (Offline)" : "Signal lost (Offline)";
+            trackEl.innerText = currentLang === 'ru' ? "Тишина в эфире (Offline)" : "Silence (Offline)";
         }
     } catch (e) {
         console.error("Last.fm Error:", e);
