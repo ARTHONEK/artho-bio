@@ -183,3 +183,35 @@ document.addEventListener('DOMContentLoaded', () => {
     initGallery();
     loadLore('lore-headcanon.txt');
 });
+
+const LFM_API_KEY = "b6de514b70401a6ab70a250dc1cb63dd";
+const LFM_USER = "arthonek";
+
+async function updateLastFm() {
+    const trackEl = document.getElementById('track-name');
+    const url = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${LFM_USER}&api_key=${LFM_API_KEY}&format=json&limit=1`;
+
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        const track = data.recenttracks.track[0];
+
+        // Проверяем, играет ли трек прямо сейчас
+        const isPlaying = track['@attr'] && track['@attr'].nowplaying === 'true';
+        
+        if (isPlaying) {
+            const trackText = `${track.artist['#text']} — ${track.name}`;
+            trackEl.innerText = currentLang === 'ru' ? `Слушаю: ${trackText}` : `Listening to: ${trackText}`;
+        } else {
+            // Если ничего не играет, можно либо скрыть блок, либо написать "Offline"
+            trackEl.innerText = currentLang === 'ru' ? "Тишина в эфире" : "Signal lost";
+        }
+    } catch (e) {
+        trackEl.innerText = "...";
+    }
+}
+
+// Запускаем обновление каждые 30 секунд
+setInterval(updateLastFm, 30000);
+// И один раз при загрузке страницы
+document.addEventListener('DOMContentLoaded', updateLastFm);
