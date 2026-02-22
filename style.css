@@ -85,11 +85,15 @@ h1 {
 }
 
 .tab-btn.active {
-    background: var(--accent-color);
-    color: #000;
+    /* Используем самый яркий неоновый прямо здесь */
+    background: #000000; 
+    color: #39FF14;      /* Черный текст для максимальной читаемости */
     opacity: 1;
-    box-shadow: 0 0 10px var(--accent-glow);
+    box-shadow: 0 0 20px rgba(57, 255, 20, 0.6); /* Усиленное свечение */
+    font-weight: 900;    /* Жирный шрифт */
+    border: 1px solid #ffffff; /* Тонкая белая рамка добавит яркости краям */
 }
+
 
 /* Инфо-блоки */
 .info-block {
