@@ -252,3 +252,36 @@ h1 {
     80% { transform: translate(2px, -1px); text-shadow: -1px 0 lime, 1px 0 magenta; }
     100% { transform: translate(0); }
 }
+
+.lore-container {
+    max-height: 400px;
+    overflow-y: auto;
+    text-align: left;
+    white-space: pre-wrap; /* Сохраняет переносы строк из текстового файла */
+    padding: 15px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-color) transparent;
+}
+
+/* Стилизация скроллбара для Chrome/Safari */
+.lore-container::-webkit-scrollbar { width: 4px; }
+.lore-container::-webkit-scrollbar-thumb { background: var(--accent-color); border-radius: 10px; }
+
+.sub-tabs {
+    margin-bottom: 10px;
+    background: rgba(0, 255, 102, 0.05); /* Более тонкий фон */
+}
+
+.sub-tabs .tab-btn {
+    padding: 8px 5px;
+    font-size: 0.7rem; /* Чуть меньше основных кнопок */
+}
+
+.lore-container {
+    max-height: 350px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    line-height: 1.6;
+}

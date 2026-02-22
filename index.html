@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bio | Artho</title>
-    <link rel="stylesheet" href="style.css?v=1.8">
+    <link rel="stylesheet" href="style.css?v=1.9">
     <link href="https://fonts.googleapis.com/css2?family=VT323&family=Pixelify+Sans&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;800&family=Pixelify+Sans:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -58,30 +58,28 @@
             <a href="https://t.me/sikretplaceovartho" target="_blank" class="link-card" style="margin-top: 10px;">📸 все арты с моими персонажами</a>
         </div>
 
-        <div id="lore" class="tab-content">
-            <div class="gallery-title">Системные характеристики</div>
-            <div class="info-block">
-                <table class="proto-stats">
-                    <tr><td>Модель</td><td>Artho-M-026</td></tr>
-                    <tr><td>Рост</td><td>168 cm</td></tr>
-                    <tr><td>Вес</td><td>57 kg</td></tr>
-                    <tr><td>Визор</td><td>Nanites</td></tr>
-                    <tr><td>ОС</td><td>Data-Core v3.1-beta</td></tr>
-                    <tr><td>Питание</td><td>organic matter</td></tr>
-                    <tr><td>Место сборки</td><td>Нижний Новгород</td></tr>
-                    <tr><td>Статус</td><td><span style="color: #00ff66;">Online / Stable</span></td></tr>
-                </table>
-            </div>
-            <div class="gallery-title">Headcanon</div>
-            <div class="info-block">
-                <div class="info-block">
-                  <span class="glitch-text">CRITICAL ERROR: Under construction</span>
-                  <br><br>
-                  <img src="construction.jpg" align="center" height="160" width="250">
-                </div>
+<div id="lore" class="tab-content">
+    <div class="gallery-title">Системные характеристики</div>
+    <div class="info-block">
+        <table class="proto-stats">
+            <tr><td>Модель</td><td>Artho-M-026</td></tr>
+            <tr><td>Место сборки</td><td>Moon Colony Selena-4</td></tr>
+            <tr><td>Статус</td><td><span style="color: #00ff66;">Online / Stable</span></td></tr>
+        </table>
+    </div>
 
-            </div>
-        </div>
+    <div class="gallery-title">Архивы данных</div>
+    
+    <div class="tabs-menu sub-tabs">
+        <button class="tab-btn active" onclick="loadLore('lore-headcanon.txt', event)">Происхождение</button>
+        <button class="tab-btn" onclick="loadLore('lore-earth.txt', event)">Земля</button>
+        <button class="tab-btn" onclick="loadLore('lore-anatomy.txt', event)">Анатомия</button>
+    </div>
+
+    <div class="info-block">
+        <div id="lore-content" class="lore-container">Загрузка данных...</div>
+    </div>
+</div>
 
 
         <div id="achieve" class="tab-content">

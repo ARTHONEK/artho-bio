@@ -67,3 +67,31 @@ document.addEventListener('DOMContentLoaded', () => {
     initGallery();
     initEasterEgg();
 });
+
+async function loadLore(fileName, event) {
+    const container = document.getElementById('lore-content');
+    
+    // 1. Управляем активными кнопками в под-меню
+    if (event) {
+        const subButtons = event.currentTarget.parentElement.querySelectorAll('.tab-btn');
+        subButtons.forEach(btn => btn.classList.remove('active'));
+        event.currentTarget.classList.add('active');
+    }
+
+    // 2. Загружаем текст
+    try {
+        container.style.opacity = "0.5"; // Эффект загрузки
+        const response = await fetch(fileName);
+        if (!response.ok) throw new Error('Ошибка связи');
+        const text = await response.text();
+        container.innerText = text;
+        container.style.opacity = "1";
+    } catch (error) {
+        container.innerHTML = '<span class="glitch-text">CRITICAL ERROR: FILE_NOT_FOUND</span>';
+    }
+}
+
+// Загружаем первый файл по умолчанию при старте
+window.addEventListener('DOMContentLoaded', () => {
+    loadLore('lore-headcanon.txt');
+});
