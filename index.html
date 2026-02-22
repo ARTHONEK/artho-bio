@@ -4,15 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bio | Artho</title>
-    <link rel="stylesheet" href="style.css?v=1.9">
-    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Pixelify+Sans&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=1.10">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;800&family=Pixelify+Sans:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-
-
-
 </head>
 <body>
+
+    <button id="lang-switch" class="lang-btn" onclick="toggleLanguage()">EN</button>
 
     <a href="https://arthonek.github.io/moai/" class="easter-egg-zone" id="moai-egg">🗿</a>
 
@@ -20,9 +17,9 @@
         <img src="pfp.jpg" alt="Avatar" class="profile-img">
         
         <h1>Artho/Arthonek</h1>
-        <p class="bio-text">просто случайный протоген из Нижнего Новгорода</p>
+        <p class="bio-text" id="bio-desc">просто случайный протоген из Нижнего Новгорода</p>
 
-        <nav class="tabs-menu">
+        <nav class="tabs-menu" id="main-tabs">
             <button class="tab-btn active" onclick="openTab(event, 'main')">Инфо</button>
             <button class="tab-btn" onclick="openTab(event, 'gallery')">Арты</button>
             <button class="tab-btn" onclick="openTab(event, 'lore')">Лор</button>
@@ -30,20 +27,20 @@
         </nav>
 
         <div id="main" class="tab-content active">
-            <div class="info-block">
+            <div class="info-block" id="info-text">
                 Привет! Меня зовут <span>Артур</span>, мне <span id="age">...</span>. Живу в Нижнем Новгороде. 
                 В фурри-сообществе нахожусь примерно с осени 2023 года. Рад знакомству!
             </div>
             <div class="links">
-                <a href="https://t.me/prootis" target="_blank" class="link-card">✈️ личный тгк</a>
-                <a href="https://t.me/arthonek" target="_blank" class="link-card">☕️ лс телеграма</a>
-                <a href="https://proto-map.vercel.app/profile/ARTHO" target="_blank" class="link-card">🥀 профиль Protomap</a>
-                <a href="https://www.last.fm/user/arthonek" target="_blank" class="link-card">🎧 мой last.fm профиль</a>
+                <a href="https://t.me/prootis" target="_blank" class="link-card" id="link-tgc">✈️ личный тгк</a>
+                <a href="https://t.me/arthonek" target="_blank" class="link-card" id="link-tgdm">☕️ лс телеграма</a>
+                <a href="https://proto-map.vercel.app/profile/ARTHO" target="_blank" class="link-card" id="link-protomap">🥀 профиль Protomap</a>
+                <a href="https://www.last.fm/user/arthonek" target="_blank" class="link-card" id="link-lfm">🎧 мой last.fm профиль</a>
             </div>
         </div>
 
         <div id="gallery" class="tab-content">
-            <div class="gallery-title">Галерея персонажа</div>
+            <div class="gallery-title" id="gallery-header">Галерея персонажа</div>
             <div class="gallery-grid">
                 <div class="gallery-item"><img src="1.jpg" alt="Art 1"></div>
                 <div class="gallery-item"><img src="2.jpg" alt="Art 2"></div>
@@ -55,42 +52,41 @@
                 <div class="gallery-item"><img src="8.jpg" alt="Art 8"></div>
                 <div class="gallery-item"><img src="9.jpg" alt="Art 9"></div>
             </div>
-            <a href="https://t.me/sikretplaceovartho" target="_blank" class="link-card" style="margin-top: 10px;">📸 все арты с моими персонажами</a>
+            <a href="https://t.me/sikretplaceovartho" target="_blank" class="link-card" style="margin-top: 10px;" id="link-all-arts">📸 все арты с моими персонажами</a>
         </div>
 
-<div id="lore" class="tab-content">
-    <div class="gallery-title">Системные характеристики</div>
-    <div class="info-block">
-        <table class="proto-stats">
-            <tr><td>Модель</td><td>Artho-M-026</td></tr>
-            <tr><td>Место сборки</td><td>Moon Colony Selena-4</td></tr>
-            <tr><td>Статус</td><td><span style="color: #00ff66;">Online / Stable</span></td></tr>
-        </table>
-    </div>
+        <div id="lore" class="tab-content">
+            <div class="gallery-title" id="title-sys">Системные характеристики</div>
+            <div class="info-block">
+                <table class="proto-stats">
+                    <tr><td id="stat-model">Модель</td><td>Artho-M-026</td></tr>
+                    <tr><td id="stat-place">Место сборки</td><td>Moon Colony Selena-4</td></tr>
+                    <tr><td id="stat-status">Статус</td><td><span id="status-text" style="color: #00ff66;">Online / Stable</span></td></tr>
+                </table>
+            </div>
 
-    <div class="gallery-title">Архивы данных</div>
-    
-    <div class="tabs-menu sub-tabs">
-        <button class="tab-btn active" onclick="loadLore('lore-headcanon.txt', event)">Происхождение</button>
-        <button class="tab-btn" onclick="loadLore('lore-earth.txt', event)">Земля</button>
-        <button class="tab-btn" onclick="loadLore('lore-anatomy.txt', event)">Анатомия</button>
-    </div>
+            <div class="gallery-title" id="title-archive">Архивы данных</div>
+            
+            <div class="tabs-menu sub-tabs" id="lore-sub-tabs">
+                <button class="tab-btn active" onclick="loadLore('lore-headcanon.txt', event)">Происхождение</button>
+                <button class="tab-btn" onclick="loadLore('lore-earth.txt', event)">Земля</button>
+                <button class="tab-btn" onclick="loadLore('lore-anatomy.txt', event)">Анатомия</button>
+            </div>
 
-    <div class="info-block">
-        <div id="lore-content" class="lore-container">Загрузка данных...</div>
-    </div>
-</div>
-
+            <div class="info-block">
+                <div id="lore-content" class="lore-container">Загрузка данных...</div>
+            </div>
+        </div>
 
         <div id="achieve" class="tab-content">
-            <div class="gallery-title">Достижения и Сертификаты</div>
+            <div class="gallery-title" id="title-skills">Достижения и Сертификаты</div>
             <div class="achievements-grid">
                 <div class="gallery-item"><img src="certificate.png" alt="EF SET C2" title="EF SET English C2 Mastery"></div>
                 <div class="gallery-item"><img src="diploma.jpg" alt="Диплом" title="Диплом о профессиональном образовании"></div>
             </div>
         </div>
 
-        <footer class="ai-credit">
+        <footer class="ai-credit" id="footer-credit">
             Сделано при поддержке Gemini AI
         </footer>
     </div>

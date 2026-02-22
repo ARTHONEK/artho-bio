@@ -1,0 +1,20 @@
+BODY ARCHITECTURE: Model M-026 "Pure Form"
+
+INTERNAL FRAME:
+Instead of massive external plates, Artho is equipped with an endoskeleton made of titanium-ceramic composite. This skeleton is 5 times stronger than a human's, yet possesses the flexibility that allows Artho to perform acrobatic maneuvers unavailable to his "armored" counterparts.
+
+MODULARITY:
+The absence of fixed armor allowed the limbs to be made completely modular.
+- "Quick-Swap" connectors: Artho can detach his arms or legs for maintenance or replacement with specialized tools in just 30 seconds.
+- Magnetic fasteners: Joints are held by powerful electromagnetic fields, minimizing friction and wear.
+
+LIFE SUPPORT SYSTEM:
+1. Nanites: Billions of microscopic robots circulate in his biological component. They act as an immune system, instantly "welding" soft tissue damage and cleaning visor filters.
+2. Bio-reactor: Processes organic food into clean energy. Excess energy is released as gas, like all protogens.
+3. Visor: The only external part, made of hardened polycarbonate mixed with nanites. It is not a helmet — it is part of his head, directly connected to the brain's neural network. It can open its mouth to consume food.
+
+OVERLOAD MODE:
+In moments of intense stress or processing large amounts of data, the nanites in his body begin to work at their limit, causing a faint emerald glow along the entire endoskeleton.
+
+DIRECT INTERFACE:
+Artho does not use a keyboard. When connecting to the network via Wi-Fi or Bluetooth, he literally merges with the data stream.
