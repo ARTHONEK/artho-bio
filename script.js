@@ -75,13 +75,6 @@ function toggleLanguage() {
 
     updateAge();
     updateLastFm();
-    
-    // Перезагружаем лор на нужном языке
-    const activeLoreBtn = document.querySelector('#lore-sub-tabs .tab-btn.active');
-    if (activeLoreBtn) {
-        const currentFile = activeLoreBtn.getAttribute('onclick').match(/'([^']+)'/)[1];
-        loadLore(currentFile);
-    }
 }
 
 function openTab(evt, tabName) {
@@ -142,8 +135,6 @@ async function loadLore(fileName, event) {
     try {
         container.style.opacity = "0.5";
         let targetFile = fileName;
-        
-        // Префикс папки, в которой лежат файлы лора
         const pathPrefix = "lore/"; 
 
         if (currentLang === 'en' && !targetFile.includes('_en')) {
@@ -164,14 +155,10 @@ async function loadLore(fileName, event) {
 async function updateLastFm() {
     const trackEl = document.getElementById('track-name');
     if (!trackEl) return;
-
     try {
-        // Запрос к Serverless-функции на Vercel
         const response = await fetch('/api/get-music');
         if (!response.ok) throw new Error();
-        
         const data = await response.json();
-
         if (data.artist && data.name) {
             trackEl.innerText = ` ${data.artist} — ${data.name}`;
         } else {
@@ -182,11 +169,54 @@ async function updateLastFm() {
     }
 }
 
+// --- НОВЫЙ БЛОК: ЗАГРУЗКА И ПАРАЛЛАКС ---
+
 document.addEventListener('DOMContentLoaded', () => {
     updateAge();
     initGallery();
-    // Загружаем первый файл из папки lore/
-    loadLore('lore-headcanon.txt'); 
     updateLastFm();
     setInterval(updateLastFm, 30000);
+
+    const container = document.getElementById('lore-content');
+    if (!container) return;
+
+    // Сообщения загрузки
+    const bootSequence = [
+        "> Initializing Neuro-Link...",
+        "> Searching for local data archives...",
+        "> Syncing with Moon Colony Selena-4...",
+        "> Decrypting anatomy files...",
+        "> Connection established. Welcome, operator."
+    ];
+
+    let lineIndex = 0;
+    const lineDelay = 2200; // Пауза между строками (в миллисекундах). Увеличь, чтобы сделать еще дольше.
+
+    container.innerHTML = ""; // Очищаем контейнер перед началом
+
+    function playBootSequence() {
+        if (lineIndex < bootSequence.length) {
+            // Добавляем строку и перенос
+            container.innerText += bootSequence[lineIndex] + "\n";
+            lineIndex++;
+            // Рекурсивно вызываем следующую строку через задержку
+            setTimeout(playBootSequence, lineDelay);
+        } else {
+            // Когда лог закончился, ждем секунду и загружаем настоящий лор
+            setTimeout(() => {
+                loadLore('lore-headcanon.txt');
+            }, 500);
+        }
+    }
+
+    // Запускаем анимацию
+    playBootSequence();
+});
+
+// Параллакс фона
+document.addEventListener('mousemove', (e) => {
+    const moveX = (e.clientX - window.innerWidth / 2) * 0.01;
+    const moveY = (e.clientY - window.innerHeight / 2) * 0.01;
+    // Сдвигаем фоновые слои
+    document.body.style.backgroundPosition = `center, ${moveX}px ${moveY}px, ${-moveX}px ${-moveY}px`;
 });
