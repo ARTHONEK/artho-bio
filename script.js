@@ -44,15 +44,11 @@ const translations = {
     }
 };
 
-// Функция переключения языка
 function toggleLanguage() {
     currentLang = currentLang === 'ru' ? 'en' : 'ru';
     const t = translations[currentLang];
     
-    // Кнопка переключателя
     document.getElementById('lang-switch').innerText = currentLang === 'ru' ? 'EN' : 'RU';
-    
-    // Базовые тексты
     document.getElementById('bio-desc').innerText = t.bio_desc;
     document.getElementById('info-text').innerHTML = t.info_text;
     document.getElementById('gallery-header').innerText = t.gallery_header;
@@ -62,48 +58,24 @@ function toggleLanguage() {
     document.getElementById('title-skills').innerText = t.title_skills;
     document.getElementById('footer-credit').innerText = t.footer;
 
-    // Ссылки
     document.getElementById('link-tgc').innerText = t.links.tgc;
     document.getElementById('link-tgdm').innerText = t.links.tgdm;
     document.getElementById('link-protomap').innerText = t.links.protomap;
     document.getElementById('link-lfm').innerText = t.links.lfm;
 
-    // Таблица характеристик
     document.getElementById('stat-model').innerText = t.stats[0];
     document.getElementById('stat-place').innerText = t.stats[1];
     document.getElementById('stat-status').innerText = t.stats[2];
 
-    // Кнопки главного меню
     const mainBtns = document.querySelectorAll('#main-tabs .tab-btn');
     mainBtns.forEach((btn, i) => btn.innerText = t.main_tabs[i]);
 
-    // Кнопки лора
     const loreBtns = document.querySelectorAll('#lore-sub-tabs .tab-btn');
     loreBtns.forEach((btn, i) => btn.innerText = t.lore_tabs[i]);
 
-    // Пересчет возраста (так как мы переписали контейнер)
     updateAge();
-
-    // Обновление лор-контента
-    const activeLoreBtn = document.querySelector('#lore-sub-tabs .tab-btn.active');
-    if (activeLoreBtn) {
-        // Получаем имя файла из атрибута onclick
-        const match = activeLoreBtn.getAttribute('onclick').match(/'([^']+)'/);
-        if (match) {
-            let fileName = match[1];
-            // Если язык английский, добавляем суффикс (если его еще нет)
-            if (currentLang === 'en' && !fileName.includes('_en')) {
-                fileName = fileName.replace('.txt', '_en.txt');
-            } else if (currentLang === 'ru') {
-                fileName = fileName.replace('_en.txt', '.txt');
-            }
-            loadLore(fileName);
-        }
-    }
-  updateLastFm();
+    updateLastFm();
 }
-
-// --- Остальные функции (без изменений, но исправленные) ---
 
 function openTab(evt, tabName) {
     const tabContent = document.getElementsByClassName("tab-content");
@@ -162,7 +134,6 @@ async function loadLore(fileName, event) {
 
     try {
         container.style.opacity = "0.5";
-        // Проверка: если язык EN, подменяем файл
         let targetFile = fileName;
         if (currentLang === 'en' && !targetFile.includes('_en')) {
             targetFile = targetFile.replace('.txt', '_en.txt');
@@ -179,48 +150,32 @@ async function loadLore(fileName, event) {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    updateAge();
-    initGallery();
-    loadLore('lore-headcanon.txt');
-});
-
-const LFM_API_KEY = "b6de514b70401a6ab70a250dc1cb63dd";
-const LFM_USER = "arthonek";
-
+// last.fm
 async function updateLastFm() {
     const trackEl = document.getElementById('track-name');
-    if (!trackEl) return; // Защита, если элемента нет на странице
-
-    const url = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${LFM_USER}&api_key=${LFM_API_KEY}&format=json&limit=1`;
+    if (!trackEl) return;
 
     try {
-        const response = await fetch(url);
-        if (!response.ok) throw new Error("API Response Error");
+        // серверная функция Vercel
+        const response = await fetch('/api/get-music');
+        if (!response.ok) throw new Error();
         
         const data = await response.json();
-        const track = data.recenttracks.track[0];
 
-        // Проверяем статус "Now Playing"
-        const isPlaying = track['@attr'] && track['@attr'].nowplaying === 'true';
-        
-        if (isPlaying) {
-            const trackText = `${track.artist['#text']} — ${track.name}`;
-            trackEl.innerText = currentLang === 'ru' ? ` ${trackText}` : ` ${trackText}`;
+        if (data.artist && data.name) {
+            trackEl.innerText = ` ${data.artist} — ${data.name}`;
         } else {
             trackEl.innerText = currentLang === 'ru' ? "Тишина в эфире (Offline)" : "Silence (Offline)";
         }
     } catch (e) {
-        console.error("Last.fm Error:", e);
         trackEl.innerText = currentLang === 'ru' ? "Ошибка модуля связи" : "Comms Error";
     }
 }
 
-// Запускаем сразу при загрузке
 document.addEventListener('DOMContentLoaded', () => {
     updateAge();
     initGallery();
     loadLore('lore-headcanon.txt');
-    updateLastFm(); // Вызываем здесь
-    setInterval(updateLastFm, 30000); // И ставим таймер
+    updateLastFm();
+    setInterval(updateLastFm, 30000);
 });
