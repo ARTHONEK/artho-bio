@@ -75,6 +75,13 @@ function toggleLanguage() {
 
     updateAge();
     updateLastFm();
+    
+    // Перезагружаем лор на нужном языке
+    const activeLoreBtn = document.querySelector('#lore-sub-tabs .tab-btn.active');
+    if (activeLoreBtn) {
+        const currentFile = activeLoreBtn.getAttribute('onclick').match(/'([^']+)'/)[1];
+        loadLore(currentFile);
+    }
 }
 
 function openTab(evt, tabName) {
@@ -135,11 +142,15 @@ async function loadLore(fileName, event) {
     try {
         container.style.opacity = "0.5";
         let targetFile = fileName;
+        
+        // Префикс папки, в которой лежат файлы лора
+        const pathPrefix = "lore/"; 
+
         if (currentLang === 'en' && !targetFile.includes('_en')) {
             targetFile = targetFile.replace('.txt', '_en.txt');
         }
 
-        const response = await fetch(targetFile);
+        const response = await fetch(pathPrefix + targetFile);
         if (!response.ok) throw new Error();
         const text = await response.text();
         container.innerText = text;
@@ -150,13 +161,12 @@ async function loadLore(fileName, event) {
     }
 }
 
-// last.fm
 async function updateLastFm() {
     const trackEl = document.getElementById('track-name');
     if (!trackEl) return;
 
     try {
-        // серверная функция Vercel
+        // Запрос к Serverless-функции на Vercel
         const response = await fetch('/api/get-music');
         if (!response.ok) throw new Error();
         
@@ -175,7 +185,8 @@ async function updateLastFm() {
 document.addEventListener('DOMContentLoaded', () => {
     updateAge();
     initGallery();
-    loadLore('lore-headcanon.txt');
+    // Загружаем первый файл из папки lore/
+    loadLore('lore-headcanon.txt'); 
     updateLastFm();
     setInterval(updateLastFm, 30000);
 });
