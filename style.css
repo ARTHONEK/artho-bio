@@ -326,3 +326,19 @@ h1 {
     50% { transform: scale(1.1); opacity: 1; }
     100% { transform: scale(1); opacity: 0.8; }
 }
+
+/* Эффект секретного кода */
+body.emergency-mode {
+    --accent-color: #ff3333; /* Меняем зеленый на ярко-красный */
+    --accent-glow: rgba(255, 51, 51, 0.5);
+    filter: sepia(0.5) saturate(2);
+    animation: alarm-shake 0.2s infinite;
+}
+
+@keyframes alarm-shake {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(1px, 1px); }
+    50% { transform: translate(-1px, -1px); }
+    75% { transform: translate(1px, -1px); }
+    100% { transform: translate(0, 0); }
+}

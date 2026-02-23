@@ -220,3 +220,39 @@ document.addEventListener('mousemove', (e) => {
     // Сдвигаем фоновые слои
     document.body.style.backgroundPosition = `center, ${moveX}px ${moveY}px, ${-moveX}px ${-moveY}px`;
 });
+
+let inputBuffer = "";
+const secretCode = "artho";
+
+document.addEventListener('keydown', (e) => {
+    // Добавляем нажатую клавишу в буфер (в нижнем регистре)
+    inputBuffer += e.key.toLowerCase();
+    
+    // Ограничиваем длину буфера длиной кода, чтобы не занимать память
+    if (inputBuffer.length > secretCode.length) {
+        inputBuffer = inputBuffer.substring(inputBuffer.length - secretCode.length);
+    }
+
+    // Проверяем совпадение
+    if (inputBuffer === secretCode) {
+        activateEmergencyMode();
+        inputBuffer = ""; // Сбрасываем буфер
+    }
+});
+
+function activateEmergencyMode() {
+    // 1. Добавляем класс тревоги на весь body
+    document.body.classList.add('emergency-mode');
+    
+    // 2. Выводим лог в консоль визора (если открыт Лор)
+    const container = document.getElementById('lore-content');
+    if (container) {
+        const originalText = container.innerText;
+        container.innerHTML = `<span style="color:#ff3333; font-weight:bold;">[WARNING] UNAUTHORIZED OVERRIDE DETECTED!</span>\n` + originalText;
+    }
+
+    // 3. Через 5 секунд возвращаем всё как было
+    setTimeout(() => {
+        document.body.classList.remove('emergency-mode');
+    }, 5000);
+}
