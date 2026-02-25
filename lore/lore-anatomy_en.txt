@@ -18,3 +18,6 @@ In moments of intense stress or processing large amounts of data, the nanites in
 
 DIRECT INTERFACE:
 Artho does not use a keyboard. When connecting to the network via Wi-Fi or Bluetooth, he literally merges with the data stream.
+
+[ SYSTEM NOTICE ]
+Emergency system override is disabled by default. To manually trigger a core reboot or access deep-layer diagnostics, the operator must input the unique authorization sequence via the terminal. Reference key: "Subject Name".
