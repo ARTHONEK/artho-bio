@@ -1,11 +1,12 @@
 const BIRTH_DATE = "2006-05-27";
 let currentLang = 'ru';
-let loreLoaded = false; // Флаг, чтобы анимация терминала была один раз
+let loreLoaded = false;
 
 const translations = {
     ru: {
         bio_desc: "просто случайный протоген из Нижнего Новгорода",
         main_tabs: ["Инфо", "Арты", "Лор", "Скиллы"],
+        gallery_tabs: ["Галерея", "Референс"],
         info_text: `Привет! Меня зовут <span>Артур</span>, мне <span id="age">...</span>. Живу в Нижнем Новгороде. В фурри-сообществе нахожусь примерно с осени 2023 года. Рад знакомству!`,
         links: {
             tgc: "✈️ личный тгк",
@@ -26,6 +27,7 @@ const translations = {
     en: {
         bio_desc: "just a random protogen from Nizhny Novgorod",
         main_tabs: ["Info", "Arts", "Lore", "Skills"],
+        gallery_tabs: ["Gallery", "Reference"],
         info_text: `Hi! My name is <span>Arthur</span>, I'm <span id="age">...</span>. I live in Nizhny Novgorod. I've been in the furry community since autumn 2023. Nice to meet you!`,
         links: {
             tgc: "✈️ personal channel",
@@ -74,10 +76,12 @@ function toggleLanguage() {
     const loreBtns = document.querySelectorAll('#lore-sub-tabs .tab-btn');
     loreBtns.forEach((btn, i) => btn.innerText = t.lore_tabs[i]);
 
+    const galleryBtns = document.querySelectorAll('#gallery-sub-tabs .tab-btn');
+    galleryBtns.forEach((btn, i) => btn.innerText = t.gallery_tabs[i]);
+
     updateAge();
     updateLastFm();
 
-    // Если лор уже загружен, обновляем язык текущего текста
     if (loreLoaded) {
         const activeLoreBtn = document.querySelector('#lore-sub-tabs .tab-btn.active');
         if (activeLoreBtn) {
@@ -100,8 +104,19 @@ function openTab(evt, tabName) {
     if (tabName === 'gallery') {
         initGallery();
     } else if (tabName === 'lore') {
-        startTerminalBoot(); // Запуск терминала при клике на Лор
+        startTerminalBoot();
     }
+}
+
+function openSubTab(evt, subTabId) {
+    const contents = document.getElementsByClassName("gallery-sub-content");
+    for (let i = 0; i < contents.length; i++) contents[i].classList.remove("active");
+
+    const buttons = evt.currentTarget.parentElement.querySelectorAll('.tab-btn');
+    buttons.forEach(btn => btn.classList.remove('active'));
+
+    document.getElementById(subTabId).classList.add("active");
+    evt.currentTarget.classList.add("active");
 }
 
 function updateAge() {
@@ -139,7 +154,6 @@ function initGallery() {
     });
 }
 
-// Загрузка терминала (анимация)
 function startTerminalBoot() {
     const container = document.getElementById('lore-content');
     if (!container || loreLoaded) return; 
@@ -149,11 +163,11 @@ function startTerminalBoot() {
         "> Searching for local data archives...",
         "> Syncing with Moon Colony Selena-4...",
         "> Decrypting anatomy files...",
-        "> Connection established. Welcome, Artho."
+        "> Connection established. Welcome, operator."
     ];
 
     let lineIndex = 0;
-    const lineDelay = 800; // Пауза между строками
+    const lineDelay = 800;
 
     container.innerHTML = "";
     
@@ -217,14 +231,12 @@ async function updateLastFm() {
     }
 }
 
-// Параллакс фона
 document.addEventListener('mousemove', (e) => {
     const moveX = (e.clientX - window.innerWidth / 2) * 0.01;
     const moveY = (e.clientY - window.innerHeight / 2) * 0.01;
     document.body.style.backgroundPosition = `center, ${moveX}px ${moveY}px, ${-moveX}px ${-moveY}px`;
 });
 
-// Секретный код "artho"
 let inputBuffer = "";
 const secretCode = "artho";
 document.addEventListener('keydown', (e) => {
@@ -244,5 +256,4 @@ document.addEventListener('DOMContentLoaded', () => {
     initGallery();
     updateLastFm();
     setInterval(updateLastFm, 30000);
-    // loadLore здесь убран, так как теперь он вызывается в startTerminalBoot
 });
