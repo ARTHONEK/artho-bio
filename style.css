@@ -1,11 +1,10 @@
 :root {
-    /* Цвета твоего протогена */
-    --bg-color: #0a0a0f;           /* Почти черный, с фиолетовым отливом */
+    --bg-color: #0a0a0f;
     --text-color: #e2e8f0;
-    --accent-color: #00ff66;       /* Тот самый зеленый с визора */
+    --accent-color: #00ff66;
     --accent-glow: rgba(0, 255, 102, 0.3);
     --card-bg: rgba(20, 20, 30, 0.7);
-    --hex-color: rgba(0, 255, 102, 0.05); /* Цвет сетки гексагонов */
+    --hex-color: rgba(0, 255, 102, 0.05);
 }
 
 body {
@@ -18,7 +17,6 @@ body {
     margin: 0;
     padding: 40px 20px;
     min-height: 100vh;
-    /* Создаем фон из хексагонов на чистом CSS */
     background-image: 
         radial-gradient(circle at center, transparent 0%, var(--bg-color) 70%),
         linear-gradient(30deg, var(--hex-color) 12%, transparent 12.5%, transparent 87%, var(--hex-color) 87.5%, var(--hex-color)),
@@ -38,7 +36,6 @@ body {
     z-index: 1;
 }
 
-/* Аватарка с неоновым кольцом */
 .profile-img {
     width: 100px;
     height: 100px;
@@ -60,7 +57,6 @@ h1 {
 
 .bio-text { font-size: 0.9rem; opacity: 0.8; margin-bottom: 25px; }
 
-/* Табы в стиле интерфейса */
 .tabs-menu {
     display: flex;
     gap: 8px;
@@ -87,17 +83,14 @@ h1 {
 }
 
 .tab-btn.active {
-    /* Используем самый яркий неоновый прямо здесь */
     background: #000000; 
-    color: #39FF14;      /* Черный текст для максимальной читаемости */
+    color: #39FF14;
     opacity: 1;
-    box-shadow: 0 0 20px rgba(57, 255, 20, 0.6); /* Усиленное свечение */
-    font-weight: 900;    /* Жирный шрифт */
-    border: 1px solid #ffffff; /* Тонкая белая рамка добавит яркости краям */
+    box-shadow: 0 0 20px rgba(57, 255, 20, 0.6);
+    font-weight: 900;
+    border: 1px solid #ffffff;
 }
 
-
-/* Инфо-блоки */
 .info-block {
     background: var(--card-bg);
     border-radius: 15px;
@@ -122,7 +115,6 @@ h1 {
     opacity: 0.9;
 }
 
-/* Кнопки ссылок */
 .links { display: flex; flex-direction: column; gap: 12px; }
 .link-card {
     background: var(--card-bg);
@@ -145,7 +137,6 @@ h1 {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
-/* Галереи */
 .gallery-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -170,7 +161,27 @@ h1 {
 
 .gallery-item img { width: 100%; height: 100%; object-fit: cover; }
 
-/* Пасхалка */
+.gallery-sub-content {
+    display: none;
+    animation: slideUp 0.4s ease;
+}
+
+.gallery-sub-content.active {
+    display: block;
+}
+
+.ref-large {
+    width: 100%;
+    aspect-ratio: auto;
+    background: var(--card-bg);
+}
+
+.ref-large img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
 .easter-egg-zone {
     position: fixed !important;
     top: 0; left: 0;
@@ -188,7 +199,6 @@ h1 {
 
 .ai-credit { margin-top: 40px; font-size: 0.7rem; opacity: 0.3; }
 
-/* Анимации */
 .tab-content { display: none; animation: slideUp 0.4s ease; }
 .tab-content.active { display: block; }
 
@@ -197,7 +207,6 @@ h1 {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Модальное окно (Lightbox) - ИСПРАВЛЕНО */
 #lightbox {
     display: none;
     position: fixed;
@@ -214,14 +223,13 @@ h1 {
 
 #lightbox img { 
     max-width: 90%; 
-    max-height: 85vh; /* Ограничение по высоте, чтобы не было гигантского зума */
-    object-fit: contain; /* Картинка всегда вписывается целиком */
+    max-height: 85vh;
+    object-fit: contain;
     border: 2px solid var(--accent-color); 
     border-radius: 10px; 
     box-shadow: 0 0 20px var(--accent-glow);
 }
 
-/* Стили сетки для блоков */
 .link-card, .tab-btn.active, .info-block {
     position: relative;
     overflow: hidden;
@@ -234,49 +242,6 @@ h1 {
     backdrop-filter: blur(8px);
 }
 
-/* Специальный класс для текста в разделе Лор */
-.glitch-text {
-    font-family: 'Press Start 2P', cursive;
-    font-size: 14px;
-    color: var(--accent-color);
-    position: relative;
-    display: inline-block;
-    animation: glitch-anim 3s infinite linear alternate-reverse;
-}
-
-@keyframes glitch-anim {
-    0% { transform: translate(0); text-shadow: -2px 0 red, 2px 0 blue; }
-    20% { transform: translate(-2px, 1px); }
-    40% { transform: translate(-2px, -1px); text-shadow: 2px 0 red, -2px 0 blue; }
-    60% { transform: translate(2px, 1px); }
-    80% { transform: translate(2px, -1px); text-shadow: -1px 0 lime, 1px 0 magenta; }
-    100% { transform: translate(0); }
-}
-
-.lore-container {
-    max-height: 400px;
-    overflow-y: auto;
-    text-align: left;
-    white-space: pre-wrap; /* Сохраняет переносы строк из текстового файла */
-    padding: 15px;
-    scrollbar-width: thin;
-    scrollbar-color: var(--accent-color) transparent;
-}
-
-/* Стилизация скроллбара для Chrome/Safari */
-.lore-container::-webkit-scrollbar { width: 4px; }
-.lore-container::-webkit-scrollbar-thumb { background: var(--accent-color); border-radius: 10px; }
-
-.sub-tabs {
-    margin-bottom: 10px;
-    background: rgba(0, 255, 102, 0.05); /* Более тонкий фон */
-}
-
-.sub-tabs .tab-btn {
-    padding: 8px 5px;
-    font-size: 0.7rem; /* Чуть меньше основных кнопок */
-}
-
 .lore-container {
     max-height: 350px;
     overflow-y: auto;
@@ -284,6 +249,21 @@ h1 {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.85rem;
     line-height: 1.6;
+    padding-left: 15px;
+    border-left: 2px solid var(--accent-color);
+}
+
+.lore-container::-webkit-scrollbar { width: 4px; }
+.lore-container::-webkit-scrollbar-thumb { background: var(--accent-color); border-radius: 10px; }
+
+.sub-tabs {
+    margin-bottom: 10px;
+    background: rgba(0, 255, 102, 0.05);
+}
+
+.sub-tabs .tab-btn {
+    padding: 8px 5px;
+    font-size: 0.7rem;
 }
 
 .lang-btn {
@@ -327,9 +307,8 @@ h1 {
     100% { transform: scale(1); opacity: 0.8; }
 }
 
-/* Эффект секретного кода */
 body.emergency-mode {
-    --accent-color: #ff3333; /* Меняем зеленый на ярко-красный */
+    --accent-color: #ff3333; 
     --accent-glow: rgba(255, 51, 51, 0.5);
     filter: sepia(0.5) saturate(2);
     animation: alarm-shake 0.2s infinite;
@@ -347,30 +326,7 @@ body.emergency-mode {
     content: "|";
     animation: blink 1s infinite;
 }
+
 @keyframes blink {
     50% { opacity: 0; }
-}
-
-/* Эффект секретного кода */
-body.emergency-mode {
-    --accent-color: #ff3333; 
-    --accent-glow: rgba(255, 51, 51, 0.5);
-    filter: sepia(0.5) saturate(2);
-    animation: alarm-shake 0.2s infinite;
-}
-
-@keyframes alarm-shake {
-    0% { transform: translate(0, 0); }
-    25% { transform: translate(1px, 1px); }
-    50% { transform: translate(-1px, -1px); }
-    75% { transform: translate(1px, -1px); }
-    100% { transform: translate(0, 0); }
-}
-
-/* Стили для терминала лора (по желанию для красоты) */
-.lore-container {
-    white-space: pre-wrap;
-    font-family: 'JetBrains Mono', monospace;
-    border-left: 2px solid var(--accent-color);
-    padding-left: 15px;
 }

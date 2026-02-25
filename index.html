@@ -6,7 +6,7 @@
     <title>Bio | Artho</title>
     <link rel="icon" type="image/webp" href="img/favicon.webp">
     <link rel="apple-touch-icon" href="img/favicon.webp">
-    <link rel="stylesheet" href="style.css?v=1.12">
+    <link rel="stylesheet" href="style.css?v=1.15">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;800&family=Pixelify+Sans:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -47,17 +47,32 @@
 
         <div id="gallery" class="tab-content">
             <div class="gallery-title" id="gallery-header">Галерея персонажа</div>
-            <div class="gallery-grid">
-                <div class="gallery-item"><img src="img/1.webp" alt="Art 1" loading="lazy"></div>
-                <div class="gallery-item"><img src="img/2.webp" alt="Art 2" loading="lazy"></div>
-                <div class="gallery-item"><img src="img/3.webp" alt="Art 3" loading="lazy"></div>
-                <div class="gallery-item"><img src="img/4.webp" alt="Art 4" loading="lazy"></div>
-                <div class="gallery-item"><img src="img/5.webp" alt="Art 4" loading="lazy"></div>
-                <div class="gallery-item"><img src="img/6.webp" alt="Art 4" loading="lazy"></div>
-                <div class="gallery-item"><img src="img/7.webp" alt="Art 4" loading="lazy"></div>
-                <div class="gallery-item"><img src="img/8.webp" alt="Art 4" loading="lazy"></div>
-                <div class="gallery-item"><img src="img/9.webp" alt="Art 4" loading="lazy"></div>
+            
+            <div class="tabs-menu sub-tabs" id="gallery-sub-tabs">
+                <button class="tab-btn active" onclick="openSubTab(event, 'gallery-grid-main')">Галерея</button>
+                <button class="tab-btn" onclick="openSubTab(event, 'gallery-ref-content')">Референс</button>
             </div>
+
+            <div id="gallery-grid-main" class="gallery-sub-content active">
+                <div class="gallery-grid">
+                    <div class="gallery-item"><img src="img/1.webp" alt="Art 1" loading="lazy"></div>
+                    <div class="gallery-item"><img src="img/2.webp" alt="Art 2" loading="lazy"></div>
+                    <div class="gallery-item"><img src="img/3.webp" alt="Art 3" loading="lazy"></div>
+                    <div class="gallery-item"><img src="img/4.webp" alt="Art 4" loading="lazy"></div>
+                    <div class="gallery-item"><img src="img/5.webp" alt="Art 5" loading="lazy"></div>
+                    <div class="gallery-item"><img src="img/6.webp" alt="Art 6" loading="lazy"></div>
+                    <div class="gallery-item"><img src="img/7.webp" alt="Art 7" loading="lazy"></div>
+                    <div class="gallery-item"><img src="img/8.webp" alt="Art 8" loading="lazy"></div>
+                    <div class="gallery-item"><img src="img/9.webp" alt="Art 9" loading="lazy"></div>
+                </div>
+            </div>
+
+            <div id="gallery-ref-content" class="gallery-sub-content">
+                <div class="gallery-item ref-large">
+                    <img src="img/construction.webp" alt="Reference Sheet" loading="lazy">
+                </div>
+            </div>
+
             <a href="https://t.me/arthonek_tgc/142" target="_blank" class="link-card all-arts-btn" id="link-all-arts">📸 все арты с моими персонажами</a>
         </div>
 
