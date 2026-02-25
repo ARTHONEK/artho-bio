@@ -5,9 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bio | Artho</title>
     <link rel="icon" type="image/webp" href="img/favicon.webp">
-
     <link rel="apple-touch-icon" href="img/favicon.webp">
-
     <link rel="stylesheet" href="style.css?v=1.12">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;800&family=Pixelify+Sans:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
@@ -18,13 +16,12 @@
     <a href="https://arthonek.github.io/moai/" class="easter-egg-zone" id="moai-egg">🗿</a>
 
     <div class="container">
-        <img src="img/pfp.webp" alt="Avatar" class="profile-img"  loading="lazy">
+        <img src="img/pfp.webp" alt="Avatar" class="profile-img" loading="lazy">
         
         <div id="now-playing" class="now-playing">
           <span class="music-icon">🎵</span> <span id="track-name">Система ожидания...</span>
         </div>
 
-        
         <h1>Artho/Arthonek</h1>
         <p class="bio-text" id="bio-desc">просто случайный протоген из Нижнего Новгорода</p>
 
@@ -36,14 +33,14 @@
         </nav>
 
         <div id="main" class="tab-content active">
-            <div class="info-block" id="info-text">
-                Привет! Меня зовут <span>Артур</span>, мне <span id="age">...</span>. Живу в Нижнем Новгороде. 
-                В фурри-сообществе нахожусь примерно с осени 2023 года. Рад знакомству!
+            <div class="info-block">
+                <p id="info-text">Привет! Меня зовут <span>Артур</span>, мне <span id="age">...</span>. Живу в Нижнем Новгороде. В фурри-сообществе нахожусь примерно с осени 2023 года. Рад знакомству!</p>
             </div>
-            <div class="links">
-                <a href="https://t.me/prootis" target="_blank" class="link-card" id="link-tgc">✈️ личный тгк</a>
+            
+            <div class="links-grid">
+                <a href="https://t.me/arthonek_tgc" target="_blank" class="link-card" id="link-tgc">✈️ личный тгк</a>
                 <a href="https://t.me/arthonek" target="_blank" class="link-card" id="link-tgdm">☕️ лс телеграма</a>
-                <a href="https://proto-map.vercel.app/u/KRyygW2X1NQnMdzGp7aUzBt1kYt1" target="_blank" class="link-card" id="link-protomap">🥀 профиль Protomap</a>
+                <a href="https://protomap.com/p/arthonek" target="_blank" class="link-card" id="link-protomap">🥀 профиль Protomap</a>
                 <a href="https://www.last.fm/user/arthonek" target="_blank" class="link-card" id="link-lfm">🎧 мой last.fm профиль</a>
             </div>
         </div>
@@ -55,22 +52,22 @@
                 <div class="gallery-item"><img src="img/2.webp" alt="Art 2" loading="lazy"></div>
                 <div class="gallery-item"><img src="img/3.webp" alt="Art 3" loading="lazy"></div>
                 <div class="gallery-item"><img src="img/4.webp" alt="Art 4" loading="lazy"></div>
-                <div class="gallery-item"><img src="img/5.webp" alt="Art 5" loading="lazy"></div>
-                <div class="gallery-item"><img src="img/6.webp" alt="Art 6" loading="lazy"></div>
-                <div class="gallery-item"><img src="img/7.webp" alt="Art 7" loading="lazy"></div>
-                <div class="gallery-item"><img src="img/8.webp" alt="Art 8" loading="lazy"></div>
-                <div class="gallery-item"><img src="img/9.webp" alt="Art 9" loading="lazy"></div>
+                <div class="gallery-item"><img src="img/5.webp" alt="Art 4" loading="lazy"></div>
+                <div class="gallery-item"><img src="img/6.webp" alt="Art 4" loading="lazy"></div>
+                <div class="gallery-item"><img src="img/7.webp" alt="Art 4" loading="lazy"></div>
+                <div class="gallery-item"><img src="img/8.webp" alt="Art 4" loading="lazy"></div>
+                <div class="gallery-item"><img src="img/9.webp" alt="Art 4" loading="lazy"></div>
             </div>
-            <a href="https://t.me/sikretplaceovartho" target="_blank" class="link-card" style="margin-top: 10px;" id="link-all-arts">📸 все арты с моими персонажами</a>
+            <a href="https://t.me/arthonek_tgc/142" target="_blank" class="link-card all-arts-btn" id="link-all-arts">📸 все арты с моими персонажами</a>
         </div>
 
         <div id="lore" class="tab-content">
             <div class="gallery-title" id="title-sys">Системные характеристики</div>
             <div class="info-block">
-                <table class="proto-stats">
-                    <tr><td id="stat-model">Модель</td><td>Artho-M-026</td></tr>
-                    <tr><td id="stat-place">Место сборки</td><td>Moon Colony Selena-4</td></tr>
-                    <tr><td id="stat-status">Статус</td><td><span id="status-text" style="color: #00ff66;">Online / Stable</span></td></tr>
+                <table class="stats-table">
+                    <tr><td id="stat-model">Модель</td><td><span>Protogen v2.1</span></td></tr>
+                    <tr><td id="stat-place">Место сборки</td><td><span>Selena-4</span></td></tr>
+                    <tr><td id="stat-status">Статус</td><td><span>Stable</span></td></tr>
                 </table>
             </div>
 
@@ -90,20 +87,16 @@
         <div id="achieve" class="tab-content">
             <div class="gallery-title" id="title-skills">Достижения и Сертификаты</div>
             <div class="achievements-grid">
-                <div class="gallery-item"><img src="img/certificate.webp" alt="EF SET C2" title="EF SET English C2 Mastery"  loading="lazy"></div>
-                <div class="gallery-item"><img src="img/diploma.webp" alt="Диплом" title="Диплом о профессиональном образовании"  loading="lazy"></div>
+                <div class="gallery-item"><img src="img/certificate.webp" alt="EF SET C2" title="EF SET English C2 Mastery" loading="lazy"></div>
+                <div class="gallery-item"><img src="img/diploma.webp" alt="Диплом" title="Диплом о профессиональном образовании" loading="lazy"></div>
             </div>
         </div>
 
-        <footer class="ai-credit" id="footer-credit">
-            Сделано при поддержке Gemini AI
-        </footer>
+        <footer class="ai-credit" id="footer-credit">Сделано при поддержке Gemini AI</footer>
     </div>
 
-    <div id="lightbox" onclick="this.style.display='none'">
-        <img id="lightbox-img" src="" alt="Full View">
-    </div>
+    <div id="lightbox" onclick="this.style.display='none'"><img id="lightbox-img" src="" alt="Full View"></div>
 
-    <script src="script.js"></script>
+    <script src="script.js?v=1.12"></script>
 </body>
 </html>

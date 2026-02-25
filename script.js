@@ -1,5 +1,6 @@
 const BIRTH_DATE = "2006-05-27";
 let currentLang = 'ru';
+let loreLoaded = false; // Флаг, чтобы анимация терминала была один раз
 
 const translations = {
     ru: {
@@ -75,6 +76,15 @@ function toggleLanguage() {
 
     updateAge();
     updateLastFm();
+
+    // Если лор уже загружен, обновляем язык текущего текста
+    if (loreLoaded) {
+        const activeLoreBtn = document.querySelector('#lore-sub-tabs .tab-btn.active');
+        if (activeLoreBtn) {
+            const currentFile = activeLoreBtn.getAttribute('onclick').match(/'([^']+)'/)[1];
+            loadLore(currentFile);
+        }
+    }
 }
 
 function openTab(evt, tabName) {
@@ -86,7 +96,12 @@ function openTab(evt, tabName) {
 
     document.getElementById(tabName).classList.add("active");
     evt.currentTarget.classList.add("active");
-    if (tabName === 'gallery') initGallery();
+
+    if (tabName === 'gallery') {
+        initGallery();
+    } else if (tabName === 'lore') {
+        startTerminalBoot(); // Запуск терминала при клике на Лор
+    }
 }
 
 function updateAge() {
@@ -122,6 +137,39 @@ function initGallery() {
             lightbox.style.display = 'flex';
         };
     });
+}
+
+// Загрузка терминала (анимация)
+function startTerminalBoot() {
+    const container = document.getElementById('lore-content');
+    if (!container || loreLoaded) return; 
+
+    const bootSequence = [
+        "> Initializing Neuro-Link...",
+        "> Searching for local data archives...",
+        "> Syncing with Moon Colony Selena-4...",
+        "> Decrypting anatomy files...",
+        "> Connection established. Welcome, Artho."
+    ];
+
+    let lineIndex = 0;
+    const lineDelay = 800; // Пауза между строками
+
+    container.innerHTML = "";
+    
+    function playBootSequence() {
+        if (lineIndex < bootSequence.length) {
+            container.innerText += bootSequence[lineIndex] + "\n";
+            lineIndex++;
+            setTimeout(playBootSequence, lineDelay);
+        } else {
+            setTimeout(() => {
+                loreLoaded = true;
+                loadLore('lore-headcanon.txt');
+            }, 1000);
+        }
+    }
+    playBootSequence();
 }
 
 async function loadLore(fileName, event) {
@@ -169,90 +217,32 @@ async function updateLastFm() {
     }
 }
 
-// --- НОВЫЙ БЛОК: ЗАГРУЗКА И ПАРАЛЛАКС ---
+// Параллакс фона
+document.addEventListener('mousemove', (e) => {
+    const moveX = (e.clientX - window.innerWidth / 2) * 0.01;
+    const moveY = (e.clientY - window.innerHeight / 2) * 0.01;
+    document.body.style.backgroundPosition = `center, ${moveX}px ${moveY}px, ${-moveX}px ${-moveY}px`;
+});
+
+// Секретный код "artho"
+let inputBuffer = "";
+const secretCode = "artho";
+document.addEventListener('keydown', (e) => {
+    inputBuffer += e.key.toLowerCase();
+    if (inputBuffer.length > secretCode.length) {
+        inputBuffer = inputBuffer.substring(inputBuffer.length - secretCode.length);
+    }
+    if (inputBuffer === secretCode) {
+        document.body.classList.add('emergency-mode');
+        setTimeout(() => document.body.classList.remove('emergency-mode'), 5000);
+        inputBuffer = "";
+    }
+});
 
 document.addEventListener('DOMContentLoaded', () => {
     updateAge();
     initGallery();
     updateLastFm();
     setInterval(updateLastFm, 30000);
-
-    const container = document.getElementById('lore-content');
-    if (!container) return;
-
-    // Сообщения загрузки
-    const bootSequence = [
-        "> Initializing Neuro-Link...",
-        "> Searching for local data archives...",
-        "> Syncing with Moon Colony Selena-4...",
-        "> Decrypting anatomy files...",
-        "> Connection established. Welcome, operator."
-    ];
-
-    let lineIndex = 0;
-    const lineDelay = 2200; // Пауза между строками (в миллисекундах). Увеличь, чтобы сделать еще дольше.
-
-    container.innerHTML = ""; // Очищаем контейнер перед началом
-
-    function playBootSequence() {
-        if (lineIndex < bootSequence.length) {
-            // Добавляем строку и перенос
-            container.innerText += bootSequence[lineIndex] + "\n";
-            lineIndex++;
-            // Рекурсивно вызываем следующую строку через задержку
-            setTimeout(playBootSequence, lineDelay);
-        } else {
-            // Когда лог закончился, ждем секунду и загружаем настоящий лор
-            setTimeout(() => {
-                loadLore('lore-headcanon.txt');
-            }, 500);
-        }
-    }
-
-    // Запускаем анимацию
-    playBootSequence();
+    // loadLore здесь убран, так как теперь он вызывается в startTerminalBoot
 });
-
-// Параллакс фона
-document.addEventListener('mousemove', (e) => {
-    const moveX = (e.clientX - window.innerWidth / 2) * 0.01;
-    const moveY = (e.clientY - window.innerHeight / 2) * 0.01;
-    // Сдвигаем фоновые слои
-    document.body.style.backgroundPosition = `center, ${moveX}px ${moveY}px, ${-moveX}px ${-moveY}px`;
-});
-
-let inputBuffer = "";
-const secretCode = "artho";
-
-document.addEventListener('keydown', (e) => {
-    // Добавляем нажатую клавишу в буфер (в нижнем регистре)
-    inputBuffer += e.key.toLowerCase();
-    
-    // Ограничиваем длину буфера длиной кода, чтобы не занимать память
-    if (inputBuffer.length > secretCode.length) {
-        inputBuffer = inputBuffer.substring(inputBuffer.length - secretCode.length);
-    }
-
-    // Проверяем совпадение
-    if (inputBuffer === secretCode) {
-        activateEmergencyMode();
-        inputBuffer = ""; // Сбрасываем буфер
-    }
-});
-
-function activateEmergencyMode() {
-    // 1. Добавляем класс тревоги на весь body
-    document.body.classList.add('emergency-mode');
-    
-    // 2. Выводим лог в консоль визора (если открыт Лор)
-    const container = document.getElementById('lore-content');
-    if (container) {
-        const originalText = container.innerText;
-        container.innerHTML = `<span style="color:#ff3333; font-weight:bold;">[WARNING] UNAUTHORIZED OVERRIDE DETECTED!</span>\n` + originalText;
-    }
-
-    // 3. Через 5 секунд возвращаем всё как было
-    setTimeout(() => {
-        document.body.classList.remove('emergency-mode');
-    }, 5000);
-}
