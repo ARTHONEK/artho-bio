@@ -1,5 +1,5 @@
 export default async function handler(req, res) {
-    const apiKey = process.env.LFM_API_KEY; // Ключ будет браться из настроек Vercel
+    const apiKey = process.env.LFM_API_KEY;
     const user = "arthonek";
     const url = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${user}&api_key=${apiKey}&format=json&limit=1`;
 
@@ -9,6 +9,11 @@ export default async function handler(req, res) {
         const track = data.recenttracks.track[0];
         
         const isPlaying = track['@attr'] && track['@attr'].nowplaying === 'true';
+
+        // ДОБАВЛЕНО: Кэширование ответа на стороне Vercel Edge Network
+        // s-maxage=30 — кэширует на сервере на 30 секунд
+        // stale-while-revalidate — позволяет отдавать старые данные, пока фоном обновляются новые
+        res.setHeader('Cache-Control', 's-maxage=30, stale-while-revalidate');
 
         if (isPlaying) {
             res.status(200).json({ artist: track.artist['#text'], name: track.name });
