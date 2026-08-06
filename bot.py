@@ -31,7 +31,7 @@ TOKEN = os.environ.get("TELEGRAM_TOKEN")
 if not TOKEN:
     raise ValueError("Не задана переменная окружения TELEGRAM_TOKEN!")
 
-# Получаем и проверяем ваш Telegram ID из переменной окружения
+# Получаем и проверяем ваш Telegram ID из переменной окружения, приводим к int
 owner_id_env = os.environ.get("MY_TELEGRAM_ID")
 if not owner_id_env:
     raise ValueError("Не задана переменная окружения MY_TELEGRAM_ID!")
@@ -42,9 +42,8 @@ bot = telebot.TeleBot(TOKEN)
 
 @bot.message_handler(commands=['start', 'help'])
 def send_welcome(message):
-    # Если кто-то чужой вызовет команду старт, можно тоже отсечь или ответить
+    # Если команду старт вызывает кто-то чужой, игнорируем
     if message.from_user.id != OWNER_ID:
-        bot.reply_to(message, "⛔ Этот бот предназначен только для владельца сайта.")
         return
         
     bot.reply_to(
@@ -54,7 +53,7 @@ def send_welcome(message):
 
 @bot.message_handler(func=lambda message: True)
 def handle_all_messages(message):
-    # 🔥 Главная проверка: если ID отправителя не совпадает с вашим, игнорируем сообщение
+    # 🔥 Жесткая проверка: если ID отправителя не совпадает с вашим, полностью игнорируем
     if message.from_user.id != OWNER_ID:
         return
 
