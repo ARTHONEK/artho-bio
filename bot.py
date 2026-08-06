@@ -31,7 +31,6 @@ TOKEN = os.environ.get("TELEGRAM_TOKEN")
 if not TOKEN:
     raise ValueError("Не задана переменная окружения TELEGRAM_TOKEN!")
 
-# Получаем и проверяем ваш Telegram ID из переменной окружения, приводим к int
 owner_id_env = os.environ.get("MY_TELEGRAM_ID")
 if not owner_id_env:
     raise ValueError("Не задана переменная окружения MY_TELEGRAM_ID!")
@@ -40,12 +39,13 @@ OWNER_ID = int(owner_id_env)
 
 bot = telebot.TeleBot(TOKEN)
 
+@bot.message_handler(func=lambda message: message.from_user.id != OWNER_ID)
+def ignore_others(message):
+    # Полностью перехватываем и глушим любые сообщения от всех, кроме владельца
+    return
+
 @bot.message_handler(commands=['start', 'help'])
 def send_welcome(message):
-    # Если команду старт вызывает кто-то чужой, игнорируем
-    if message.from_user.id != OWNER_ID:
-        return
-        
     bot.reply_to(
         message, 
         "👋 Привет! Отправь мне текстовое сообщение, и оно появится в прямой трансляции данных на сайте."
@@ -53,10 +53,6 @@ def send_welcome(message):
 
 @bot.message_handler(func=lambda message: True)
 def handle_all_messages(message):
-    # 🔥 Жесткая проверка: если ID отправителя не совпадает с вашим, полностью игнорируем
-    if message.from_user.id != OWNER_ID:
-        return
-
     try:
         raw_text = message.text or message.caption
         if not raw_text:
@@ -64,7 +60,6 @@ def handle_all_messages(message):
 
         clean_text = raw_text.strip()
         
-        # 🔥 ИГНОРИРУЕМ СООБЩЕНИЯ, КОТОРЫЕ САЙТ ОТПРАВИЛ В TELEGRAM
         if "Новое сообщение с сайта!" in clean_text:
             return
 
@@ -77,7 +72,6 @@ def handle_all_messages(message):
 
         ref = db.reference('messages')
         
-        # В Live Log попадают ТОЛЬКО ваши сообщения
         ref.push({
             'name': author_name[:50],
             'text': clean_text,
