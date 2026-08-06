@@ -1,0 +1,95 @@
+export const translations = {
+    ru: {
+        bio_desc: "просто случайный протоген из Нижнего Новгорода",
+        main_tabs: ["Инфо", "Арты", "Лор", "Музыка", "Скиллы"],
+        gallery_tabs: ["Галерея", "Референс"],
+        info_text: `Привет! Меня зовут <span>Артур</span>, мне <span id="age">...</span>. Живу в Нижнем Новгороде. В фурри-сообществе нахожусь примерно с осени 2023 года. Рад знакомству!`,
+        links: {
+            tgc: "Личный тгк",
+            tgdm: "Личка тг",
+            protomap: "Профиль Protomap",
+            lfm: "Мой Last.fm профиль"
+        },
+        gallery_header: "Галерея персонажа",
+        link_all_arts: "Все арты",
+        title_sys: "Системные характеристики",
+        stats: ["Модель", "Место сборки", "Статус"],
+        title_archive: "Архивы данных",
+        lore_tabs: ["Происхождение", "Земля", "Анатомия"],
+        title_skills: "Достижения и Сертификаты",
+        footer: "Сделано при поддержке Gemini AI",
+        loading: "Загрузка данных...",
+        title_live_log: "Прямая трансляция данных",
+        send_btn: "ОТПРАВИТЬ",
+        input_placeholder: "Написать Артуру...",
+        name_placeholder: "Ваше имя / Никнейм...",
+        contact_placeholder: "TG / Discord / Email...",
+        label_contacts: "Оставить контакты для связи",
+        wait_msg: "Подождите немного...",
+        link_error: "Ссылки запрещены!",
+        send_success: "Сообщение отправлено!",
+        game_silence: "Отдыхает от игр",
+        playing_in: "Играет в",
+
+        music_title: "Музыкальный бортовой журнал",
+        top_artists: "Топ исполнителей",
+        top_tracks: "Часто на повторе",
+        recent_tracks: "Недавно прослушано",
+        scrobbles_count: "Скробблов всего",
+        no_music_data: "Данные музыкальной статистики недоступны",
+        top_genres: "Любимые жанры",
+        
+        // Переводы периодов:
+        period_7day: "7 дней",
+        period_1month: "Месяц",
+        period_overall: "Все время",
+        plays_unit: "прослушиваний"
+    },
+
+    en: {
+        bio_desc: "just a random protogen from Nizhny Novgorod",
+        main_tabs: ["Info", "Arts", "Lore", "Music", "Skills"],
+        gallery_tabs: ["Gallery", "Reference"],
+        info_text: `Hi! My name is <span>Arthur</span>, I'm <span id="age">...</span>. I live in Nizhny Novgorod. I've been in the furry community since autumn 2023. Nice to meet you!`,
+        links: {
+            tgc: "personal channel",
+            tgdm: "telegram DM",
+            protomap: "Protomap profile",
+            lfm: "my last.fm profile"
+        },
+        gallery_header: "Character Gallery",
+        link_all_arts: "All arts",
+        title_sys: "System Specifications",
+        stats: ["Model", "Assembly Place", "Status"],
+        title_archive: "Data Archives",
+        lore_tabs: ["Origin", "Earth", "Anatomy"],
+        title_skills: "Achievements & Certificates",
+        footer: "Made with Gemini AI support",
+        loading: "Loading data...",
+        title_live_log: "Live log",
+        send_btn: "SEND",
+        input_placeholder: "Write to Arthur...",
+        name_placeholder: "Your Name / Nickname...",
+        contact_placeholder: "TG / Discord / Email...",
+        label_contacts: "Leave contact details",
+        wait_msg: "Please wait a moment...",
+        link_error: "Links are not allowed!",
+        send_success: "Message sent!",
+        game_silence: "Not gaming right now",
+        playing_in: "Playing",
+
+        music_title: "Music Log",
+        top_artists: "Top Artists",
+        top_tracks: "Top Tracks",
+        recent_tracks: "Recently Played",
+        scrobbles_count: "Total Scrobbles",
+        no_music_data: "Music stats dynamic data unavailable",
+        top_genres: "Top Genres",
+
+        // Переводы периодов:
+        period_7day: "7 days",
+        period_1month: "1 month",
+        period_overall: "All time",
+        plays_unit: "plays"
+    }
+};

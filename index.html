@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Bio | Artho</title>
+
+<link rel="icon" type="image/webp" href="img/favicon.webp">
+<link rel="apple-touch-icon" href="img/favicon.webp">
+
+<link rel="stylesheet" href="styles/style.css?v=1.29">
+
+<link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Pixelify+Sans:wght@400;700&display=swap"
+    rel="stylesheet"
+>
+
+<!-- Open Graph / Telegram / Discord -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://artho-bio.vercel.app/">
+<meta property="og:title" content="Artho | Personal Cyber-Bio">
+<meta
+    property="og:description"
+    content="Просто случайный протоген из Нижнего Новгорода. Системные логи, лор и арты."
+>
+<meta property="og:image" content="https://artho-bio.vercel.app/img/pfp.webp">
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Artho | Personal Cyber-Bio">
+<meta
+    name="twitter:description"
+    content="Просто случайный протоген из Нижнего Новгорода. Системные логи, лор и арты."
+>
+<meta name="twitter:image" content="https://artho-bio.vercel.app/img/pfp.webp">
+
+<meta name="theme-color" content="#0a0a0f">
+
+</head>
+
+<body>
+
+<!-- Переключатель языка -->
+<button
+    id="lang-switch"
+    class="lang-btn"
+    type="button"
+    aria-label="Switch language"
+>
+    EN
+</button>
+
+<!-- Пасхалка -->
+<a
+    href="http://keepandroidopen.org"
+    class="easter-egg-zone"
+    id="android-egg"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Android Easter Egg"
+>
+    <img
+        src="img/icons/android.svg"
+        alt=""
+        width="28"
+        height="28"
+    >
+</a>
+
+<main class="container">
+
+    <!-- Профиль -->
+    <header class="profile-header">
+
+        <div class="avatar-wrapper">
+
+            <img
+                src="img/pfp.webp"
+                alt="Аватар Artho — протоген"
+                class="profile-img"
+                width="100"
+                height="100"
+                fetchpriority="high"
+            >
+
+            <span
+                id="discord-status-dot"
+                class="status-dot offline"
+                role="status"
+                aria-label="Discord status"
+                title="Discord status"
+            ></span>
+
+        </div>
+
+        <!-- Now Playing -->
+        <section
+            id="now-playing"
+            class="now-playing"
+            aria-label="Текущий трек и игровой статус"
+        >
+
+            <div
+                id="music-card"
+                class="music-card"
+                aria-live="polite"
+            >
+
+                <img
+                    id="track-cover"
+                    src="img/music.webp"
+                    alt="Обложка текущего трека"
+                    class="track-cover"
+                    width="65"
+                    height="65"
+                >
+
+                <div class="track-info">
+
+                    <div
+                        id="track-title-full"
+                        class="track-title-full"
+                    >
+                        —
+                    </div>
+
+                    <div
+                        id="track-album"
+                        class="track-album"
+                    >
+                        —
+                    </div>
+
+                    <div
+                        id="track-artist"
+                        class="track-artist"
+                    >
+                        —
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div
+                id="discord-game"
+                aria-live="polite"
+            >
+                <span class="game-icon" aria-hidden="true">🎮</span>
+                <span id="game-name">...</span>
+            </div>
+
+        </section>
+
+        <h1>Artho/Arthonek</h1>
+
+        <p
+            class="bio-text"
+            id="bio-desc"
+        >
+            просто случайный протоген из Нижнего Новгорода
+        </p>
+
+    </header>
+
+    <!-- Основные вкладки -->
+    <nav
+        class="tabs-menu"
+        id="main-tabs"
+        aria-label="Основная навигация"
+    >
+
+        <button
+            class="tab-btn active"
+            type="button"
+            data-tab="main"
+            aria-selected="true"
+            aria-controls="main"
+        >
+            Инфо
+        </button>
+
+        <button
+            class="tab-btn"
+            type="button"
+            data-tab="gallery"
+            aria-selected="false"
+            aria-controls="gallery"
+        >
+            Арты
+        </button>
+
+        <button
+            class="tab-btn"
+            type="button"
+            data-tab="lore"
+            aria-selected="false"
+            aria-controls="lore"
+        >
+            Лор
+        </button>
+
+        <button
+            class="tab-btn"
+            type="button"
+            data-tab="music"
+            aria-selected="false"
+            aria-controls="music"
+        >
+            Музыка
+        </button>
+
+        <button
+            class="tab-btn"
+            type="button"
+            data-tab="achieve"
+            aria-selected="false"
+            aria-controls="achieve"
+        >
+            Скиллы
+        </button>
+
+    </nav>
+
+    <!-- =========================
+         ИНФОРМАЦИЯ
+    ========================== -->
+
+    <section
+        id="main"
+        class="tab-content active"
+    >
+
+        <div class="info-block">
+
+            <p id="info-text">
+                Привет! Меня зовут <span>Артур</span>,
+                мне <span id="age">...</span>.
+                Живу в Нижнем Новгороде.
+                В фурри-сообществе нахожусь примерно с осени 2023 года.
+                Рад знакомству!
+            </p>
+
+        </div>
+
+        <!-- Ссылки -->
+
+        <div class="links-grid">
+
+            <a
+                href="https://t.me/prootis"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="link-card"
+                id="link-tgc"
+            >
+                <img
+                    src="img/icons/tg.svg"
+                    class="btn-icon"
+                    alt=""
+                    width="20"
+                    height="20"
+                >
+
+                <span>Личный тгк</span>
+            </a>
+
+            <a
+                href="https://t.me/arthonek"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="link-card"
+                id="link-tgdm"
+            >
+                <img
+                    src="img/icons/tg.svg"
+                    class="btn-icon"
+                    alt=""
+                    width="20"
+                    height="20"
+                >
+
+                <span>Личка тг</span>
+            </a>
+
+            <a
+                href="https://proto-map.vercel.app/u/KRyygW2X1NQnMdzGp7aUzBt1kYt1"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="link-card"
+                id="link-protomap"
+            >
+                <img
+                    src="img/icons/protomap.svg"
+                    class="btn-icon"
+                    alt=""
+                    width="20"
+                    height="20"
+                >
+
+                <span>Профиль Protomap</span>
+            </a>
+
+            <a
+                href="https://www.last.fm/user/arthonek"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="link-card"
+                id="link-lfm"
+            >
+                <img
+                    src="img/icons/last.fm.svg"
+                    class="btn-icon"
+                    alt=""
+                    width="20"
+                    height="20"
+                >
+
+                <span>Мой Last.fm профиль</span>
+            </a>
+
+        </div>
+
+        <!-- Live Log -->
+
+        <h2
+            class="gallery-title"
+            id="title-live-log"
+        >
+            Прямая трансляция данных
+        </h2>
+
+        <div class="info-block">
+
+            <div
+                id="tg-messages"
+                class="lore-container live-log"
+                aria-live="polite"
+                aria-label="Сообщения гостевой книги"
+            >
+                Установка соединения с сетью...
+            </div>
+
+        </div>
+
+        <!-- Форма -->
+
+        <form
+            id="message-form"
+            class="info-block form-box"
+        >
+
+            <input
+                type="text"
+                id="user-name"
+                class="cyber-input"
+                placeholder="Ваше имя / Никнейм..."
+                autocomplete="nickname"
+                maxlength="50"
+            >
+
+            <textarea
+                id="user-input"
+                class="cyber-textarea"
+                placeholder="Написать Артуру..."
+                maxlength="1000"
+                required
+            ></textarea>
+
+            <label class="checkbox-container">
+
+                <input
+                    type="checkbox"
+                    id="leave-contacts"
+                >
+
+                <span
+                    class="checkmark"
+                    aria-hidden="true"
+                >
+                  
+                </span>
+
+                <span id="label-contacts">
+                    Оставить контакты для связи
+                </span>
+
+            </label>
+
+            <input
+                type="text"
+                id="user-contact"
+                class="cyber-input contact-field"
+                placeholder="TG(@) / Discord / Email..."
+                autocomplete="off"
+                maxlength="100"
+                hidden
+            >
+
+            <button
+                id="send-btn"
+                type="button"
+                class="tab-btn active send-btn"
+            >
+                ОТПРАВИТЬ
+            </button>
+
+        </form>
+
+    </section>
+
+    <!-- =========================
+         ГАЛЕРЕЯ
+    ========================== -->
+
+    <section
+        id="gallery"
+        class="tab-content"
+    >
+
+        <h2
+            class="gallery-title"
+            id="gallery-header"
+        >
+            Галерея персонажа
+        </h2>
+
+        <nav
+            class="tabs-menu sub-tabs"
+            id="gallery-sub-tabs"
+            aria-label="Разделы галереи"
+        >
+
+            <button
+                class="tab-btn active"
+                type="button"
+                data-subtab="gallery-grid-main"
+                aria-selected="true"
+            >
+                Галерея
+            </button>
+
+            <button
+                class="tab-btn"
+                type="button"
+                data-subtab="gallery-ref-content"
+                aria-selected="false"
+            >
+                Референс
+            </button>
+
+        </nav>
+
+        <!-- Арты -->
+
+        <div
+            id="gallery-grid-main"
+            class="gallery-sub-content active"
+        >
+
+            <div class="gallery-grid">
+
+                <button class="gallery-item" type="button">
+                    <img
+                        src="img/1.webp"
+                        loading="lazy"
+                        alt="Арт персонажа Artho, автор неизвестен"
+                        data-author="Не помню автора, сорян"
+                    >
+                </button>
+
+                <button class="gallery-item" type="button">
+                    <img
+                        src="img/2.webp"
+                        loading="lazy"
+                        alt="Арт персонажа Artho от Жени"
+                        data-author="Женя"
+                    >
+                </button>
+
+                <button class="gallery-item" type="button">
+                    <img
+                        src="img/3.webp"
+                        loading="lazy"
+                        alt="Арт персонажа Artho от Жени"
+                        data-author="Женя"
+                    >
+                </button>
+
+                <button class="gallery-item" type="button">
+                    <img
+                        src="img/4.webp"
+                        loading="lazy"
+                        alt="Арт персонажа Artho от KaptnPlushk"
+                        data-author="https://t.me/kaptnPlushk"
+                    >
+                </button>
+
+                <button class="gallery-item" type="button">
+                    <img
+                        src="img/5.webp"
+                        loading="lazy"
+                        alt="Арт персонажа Artho от KaptnPlushk"
+                        data-author="https://t.me/kaptnPlushk"
+                    >
+                </button>
+
+                <button class="gallery-item" type="button">
+                    <img
+                        src="img/6.webp"
+                        loading="lazy"
+                        alt="Арт персонажа Artho от Chimera_WOT"
+                        data-author="https://t.me/chimera_WOT"
+                    >
+                </button>
+
+                <button class="gallery-item" type="button">
+                    <img
+                        src="img/7.webp"
+                        loading="lazy"
+                        alt="Арт персонажа Artho от KaptnPlushk"
+                        data-author="https://t.me/kaptnPlushk"
+                    >
+                </button>
+
+                <button class="gallery-item" type="button">
+                    <img
+                        src="img/8.webp"
+                        loading="lazy"
+                        alt="Арт персонажа Artho от KaptnPlushk"
+                        data-author="https://t.me/kaptnPlushk"
+                    >
+                </button>
+
+                <button class="gallery-item" type="button">
+                    <img
+                        src="img/9.webp"
+                        loading="lazy"
+                        alt="Арт персонажа Artho от Жени"
+                        data-author="Женя"
+                    >
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- Референс -->
+
+        <div
+            id="gallery-ref-content"
+            class="gallery-sub-content"
+        >
+
+            <button
+                class="gallery-item ref-large"
+                type="button"
+            >
+
+                <img
+                    src="img/reference.webp"
+                    loading="lazy"
+                    alt="Референс персонажа Artho"
+                >
+
+            </button>
+
+        </div>
+
+        <a
+            href="https://t.me/sikretplaceovartho"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="link-card all-arts-btn"
+            id="link-all-arts"
+        >
+
+            <img
+                src="img/icons/tg.svg"
+                class="btn-icon"
+                alt=""
+                width="20"
+                height="20"
+            >
+
+            <span>Все арты</span>
+
+        </a>
+
+    </section>
+
+    <!-- =========================
+         ЛОР
+    ========================== -->
+
+    <section
+        id="lore"
+        class="tab-content"
+    >
+
+        <h2
+            class="gallery-title"
+            id="title-sys"
+        >
+            Системные характеристики
+        </h2>
+
+        <div class="info-block">
+
+            <table class="stats-table">
+
+                <tbody>
+
+                    <tr>
+                        <th id="stat-model">Модель</th>
+                        <td><span>Artho-M-026</span></td>
+                    </tr>
+
+                    <tr>
+                        <th id="stat-place">Место сборки</th>
+                        <td><span>Moon Colony Selena-4</span></td>
+                    </tr>
+
+                    <tr>
+                        <th id="stat-status">Статус</th>
+                        <td><span>Online / Stable</span></td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <h2
+            class="gallery-title"
+            id="title-archive"
+        >
+            Архивы данных
+        </h2>
+
+        <nav
+            class="tabs-menu sub-tabs"
+            id="lore-sub-tabs"
+            aria-label="Разделы лора"
+        >
+
+            <button
+                class="tab-btn active"
+                type="button"
+                data-file="lore-headcanon.txt"
+            >
+                Происхождение
+            </button>
+
+            <button
+                class="tab-btn"
+                type="button"
+                data-file="lore-earth.txt"
+            >
+                Земля
+            </button>
+
+            <button
+                class="tab-btn"
+                type="button"
+                data-file="lore-anatomy.txt"
+            >
+                Анатомия
+            </button>
+
+        </nav>
+
+        <div class="info-block">
+
+            <div
+                id="lore-content"
+                class="lore-container"
+                aria-live="polite"
+            >
+                Загрузка данных...
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- =========================
+         МУЗЫКА
+    ========================== -->
+
+    <section
+        id="music"
+        class="tab-content"
+    >
+
+        <h2
+            class="gallery-title"
+            id="title-music"
+        >
+            Музыкальный бортовой журнал
+        </h2>
+
+        <div
+            id="music-tab-content"
+            class="info-block"
+            aria-live="polite"
+        >
+            Загрузка данных...
+        </div>
+
+    </section>
+
+    <!-- =========================
+         ДОСТИЖЕНИЯ
+    ========================== -->
+
+    <section
+        id="achieve"
+        class="tab-content"
+    >
+
+        <h2
+            class="gallery-title"
+            id="title-skills"
+        >
+            Достижения и сертификаты
+        </h2>
+
+        <div class="achievements-grid">
+
+            <button
+                class="achieve-item"
+                type="button"
+            >
+
+                <img
+                    src="img/certificate.webp"
+                    loading="lazy"
+                    alt="Сертификат EF SET English C2 Mastery"
+                    data-author="EF SET English C2 Mastery"
+                >
+
+            </button>
+
+            <button
+                class="achieve-item"
+                type="button"
+            >
+
+                <img
+                    src="img/diploma.webp"
+                    loading="lazy"
+                    alt="Диплом о профессиональном образовании"
+                    data-author="Диплом о профессиональном образовании"
+                >
+
+            </button>
+
+        </div>
+
+    </section>
+
+    <footer
+        class="ai-credit"
+        id="footer-credit"
+    >
+        Создано при помощи ИИ.
+    </footer>
+
+</main>
+
+<!-- =========================
+     LIGHTBOX
+========================== -->
+
+<div
+    id="lightbox"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Просмотр изображения"
+    aria-hidden="true"
+>
+
+    <button
+        id="lightbox-close"
+        class="lightbox-close"
+        type="button"
+        aria-label="Закрыть просмотр"
+    >
+        ×
+    </button>
+
+    <button
+        class="lb-prev"
+        type="button"
+        data-lightbox-dir="-1"
+        aria-label="Предыдущее изображение"
+    >
+        ‹
+    </button>
+
+    <div class="lb-content">
+
+        <img
+            id="lightbox-img"
+            src=""
+            alt=""
+        >
+
+        <div
+            id="lightbox-caption"
+            class="lb-caption"
+        ></div>
+
+    </div>
+
+    <button
+        class="lb-next"
+        type="button"
+        data-lightbox-dir="1"
+        aria-label="Следующее изображение"
+    >
+        ›
+    </button>
+
+</div>
+
+<script
+    type="module"
+    src="js/main.js?v=2.2"
+></script>
+
+</body>
+</html>

@@ -1,0 +1,104 @@
+#lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 10001;
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 10px;
+  background: rgba(5, 5, 10, 0.96);
+}
+
+#lightbox.is-open { display: flex; }
+
+.lb-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 85%;
+  max-height: 90vh;
+}
+
+#lightbox-img {
+  max-width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
+  border: 2px solid var(--accent-color);
+  border-radius: 10px;
+  box-shadow: 0 0 20px var(--accent-glow);
+}
+
+.lb-caption {
+  display: none;
+  margin-top: 10px;
+  padding: 5px 12px;
+  color: var(--text-color);
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid var(--accent-glow);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.lb-prev, .lb-next, .lightbox-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-color);
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid var(--accent-color);
+  cursor: pointer;
+  transition: background var(--transition-normal), color var(--transition-normal), transform var(--transition-fast);
+}
+
+.lb-prev, .lb-next {
+  flex: 0 0 45px;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  font-size: 2rem;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.lb-prev:hover, .lb-next:hover, .lightbox-close:hover { color: #000; background: var(--accent-color); }
+.lb-prev:active, .lb-next:active, .lightbox-close:active { transform: scale(0.93); }
+
+/* Пасхалка */
+.easter-egg-zone {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  background: radial-gradient(circle at top left, rgba(0, 255, 102, 0.12), rgba(0, 255, 102, 0.03) 45%, transparent 75%);
+  text-decoration: none;
+  transition: background var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.easter-egg-zone img {
+  width: 28px;
+  height: 28px;
+  opacity: 0;
+  transform: scale(0.75);
+  transition: opacity var(--transition-normal), transform var(--transition-normal), filter var(--transition-normal);
+}
+
+.easter-egg-zone:hover img, .easter-egg-zone:focus-visible img {
+  opacity: 1;
+  transform: scale(1);
+  filter: drop-shadow(0 0 4px rgba(0, 255, 102, 0.9));
+}
