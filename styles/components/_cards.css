@@ -20,6 +20,7 @@
   text-align: left;
   font-size: 0.9rem;
   line-height: 1.6;
+  overflow: visible;
 }
 
 .info-block p {

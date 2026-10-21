@@ -37,6 +37,10 @@ import {
     initBackgroundEffect
 } from './effects.js';
 
+import {
+    initAgeTooltip
+} from './tooltip.js';
+
 function initLanguageButton() {
     const button =
         document.getElementById(
@@ -63,6 +67,8 @@ async function initializeSite() {
 
     initContactForm();
     initBackgroundEffect();
+
+    initAgeTooltip();
 
     checkCooldown();
 
