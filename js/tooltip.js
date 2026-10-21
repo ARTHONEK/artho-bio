@@ -1,16 +1,19 @@
 import { getElement } from './utils.js';
 
 export function initAgeTooltip() {
-    const ageContainer = getElement('age');
+    const container = document.querySelector('.tooltip-container');
     
-    if (ageContainer) {
-        ageContainer.addEventListener('click', (e) => {
+    if (container) {
+        container.addEventListener('click', (e) => {
             e.stopPropagation();
-            ageContainer.classList.toggle('active');
+            container.classList.toggle('active');
         });
 
-        document.addEventListener('click', () => {
-            ageContainer.classList.remove('active');
+        // Закрываем при клике в любое другое место
+        document.addEventListener('click', (e) => {
+            if (!container.contains(e.target)) {
+                container.classList.remove('active');
+            }
         });
     }
 }
