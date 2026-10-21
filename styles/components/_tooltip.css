@@ -1,12 +1,11 @@
-/* Контейнер для возраста и подсказки */
 .tooltip-container {
     position: relative;
     display: inline-block;
     cursor: pointer;
     border-bottom: 1px dashed #00ff66;
+    -webkit-tap-highlight-color: transparent; /* Убирает серую подсветку при тапе на мобилках */
 }
 
-/* Стили самого всплывающего блока */
 .tooltip-container .tooltip-text {
     visibility: hidden;
     width: max-content;
@@ -16,8 +15,8 @@
     border-radius: 6px;
     padding: 4px 8px;
     position: absolute;
-    z-index: 100; /* Поднимаем слой поверх других элементов */
-    bottom: 130%; /* Выводим плашку строго над возрастом */
+    z-index: 100;
+    bottom: 130%;
     left: 50%;
     transform: translateX(-50%);
     opacity: 0;
@@ -25,10 +24,9 @@
     font-size: 0.85rem;
     border: 1px solid #00ff66;
     box-shadow: 0 0 10px rgba(0, 255, 102, 0.25);
-    pointer-events: none;
+    /* Удалили pointer-events: none; */
 }
 
-/* Показ при наведении (ПК) и по клику (смартфоны, через класс .active) */
 .tooltip-container:hover .tooltip-text,
 .tooltip-container.active .tooltip-text {
     visibility: visible;
