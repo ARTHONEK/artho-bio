@@ -78,15 +78,14 @@ async function initializeSite() {
         updateLiveLog()
     ]);
 
-    setInterval(
-        updateDiscordStatus,
-        30_000
-    );
+    // Не опрашиваем сервер, пока вкладка в фоне
+    const poll = (fn, ms) =>
+        setInterval(() => {
+            if (!document.hidden) fn();
+        }, ms);
 
-    setInterval(
-        updateLiveLog,
-        20_000
-    );
+    poll(updateDiscordStatus, 30_000);
+    poll(updateLiveLog, 20_000);
 }
 
 document.addEventListener(

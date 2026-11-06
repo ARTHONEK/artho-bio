@@ -31,6 +31,12 @@ export default async function handler(req, res) {
     return res.status(200).send('Webhook active');
   }
 
+  // Проверяем секретный заголовок Telegram: без него запрос поддельный
+  const webhookSecret = process.env.TG_WEBHOOK_SECRET;
+  if (!webhookSecret || req.headers['x-telegram-bot-api-secret-token'] !== webhookSecret) {
+    return res.status(401).send('Unauthorized');
+  }
+
   const update = req.body;
 
   if (!update?.message) {
@@ -40,7 +46,7 @@ export default async function handler(req, res) {
   const message = update.message;
 
   // Разрешаем сообщения только от владельца
-  if (!message.from || message.from.id !== OWNER_ID) {
+  if (!message.from || message.from.id !== OWNER_ID || message.chat?.type !== 'private') {
     console.log(
       `Отклонено сообщение от ${message.from?.id} (${message.from?.username || "unknown"})`
     );

@@ -21,11 +21,13 @@ if (!admin.apps.length) {
   }
 }
 
+let lastCleanup = 0;
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=30');
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
@@ -39,20 +41,24 @@ export default async function handler(req, res) {
     const db = admin.database();
     const ref = db.ref('messages');
     
-    // 🧹 1. АВТО-ОЧИСТКА: Удаляем сообщения старше 30 дней (в миллисекундах)
-    const thirtyDaysAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
-    
-    const oldMessagesSnapshot = await ref
-      .orderByChild('timestamp')
-      .endAt(thirtyDaysAgo)
-      .once('value');
+    // 🧹 1. АВТО-ОЧИСТКА: не чаще раза в час (раньше выполнялась на каждый запрос)
+    const nowTs = Date.now();
+    if (nowTs - lastCleanup > 60 * 60 * 1000) {
+      lastCleanup = nowTs;
+      const thirtyDaysAgo = nowTs - (30 * 24 * 60 * 60 * 1000);
 
-    if (oldMessagesSnapshot.exists()) {
-      const updates = {};
-      oldMessagesSnapshot.forEach((child) => {
-        updates[child.key] = null; // Присвоение null в Firebase удаляет узел
-      });
-      await ref.update(updates);
+      const oldMessagesSnapshot = await ref
+        .orderByChild('timestamp')
+        .endAt(thirtyDaysAgo)
+        .once('value');
+
+      if (oldMessagesSnapshot.exists()) {
+        const updates = {};
+        oldMessagesSnapshot.forEach((child) => {
+          updates[child.key] = null; // Присвоение null в Firebase удаляет узел
+        });
+        await ref.update(updates);
+      }
     }
 
     // 2. ВЫВЕДЕНИЕ ОСТАВШИХСЯ СООБЩЕНИЙ (до 50 штук)
@@ -69,6 +75,6 @@ export default async function handler(req, res) {
     return res.status(200).json({ success: true, messages });
   } catch (error) {
     console.error('Database Error:', error);
-    return res.status(500).json({ error: 'Failed to fetch messages', details: error.message });
+    return res.status(500).json({ error: 'Failed to fetch messages' });
   }
 }

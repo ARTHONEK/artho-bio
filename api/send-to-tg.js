@@ -76,23 +76,24 @@ export default async function handler(req, res) {
     if (admin.apps.length) {
       const db = admin.database();
       const ipRef = db.ref(`rate_limits/${sanitizedIp}`);
-      const snapshot = await ipRef.get();
 
-      if (snapshot.exists()) {
-        const lastTime = snapshot.val().lastSend || 0;
-        const timePassed = now - lastTime;
-
-        if (timePassed < cooldownMs) {
-          const retryAfter = Math.ceil((cooldownMs - timePassed) / 1000);
-          return res.status(429).json({
-            error: 'RateLimitExceeded',
-            retryAfter,
-            message: `Подождите еще ${retryAfter} сек.`
-          });
+      // Атомарная проверка: параллельные запросы не обойдут лимит
+      const result = await ipRef.transaction((current) => {
+        if (current && now - (current.lastSend || 0) < cooldownMs) {
+          return; // abort: лимит ещё действует
         }
-      }
+        return { lastSend: now };
+      });
 
-      await ipRef.set({ lastSend: now });
+      if (!result.committed) {
+        const lastTime = result.snapshot.val()?.lastSend || now;
+        const retryAfter = Math.max(1, Math.ceil((cooldownMs - (now - lastTime)) / 1000));
+        return res.status(429).json({
+          error: 'RateLimitExceeded',
+          retryAfter,
+          message: `Подождите еще ${retryAfter} сек.`
+        });
+      }
     }
 
     const token = process.env.TELEGRAM_TOKEN;

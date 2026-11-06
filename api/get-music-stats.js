@@ -33,9 +33,10 @@ async function fetchTopGenres(topArtists, apiKey) {
 
 export default async function handler(req, res) {
     const API_KEY = process.env.LFM_API_KEY;
-    const USER = process.env.LFM_USERNAME;
+    const USER = encodeURIComponent(process.env.LFM_USERNAME || 'arthonek');
     
-    const period = req.query.period || '7day';
+    const ALLOWED_PERIODS = new Set(['overall', '7day', '1month', '3month', '6month', '12month']);
+    const period = ALLOWED_PERIODS.has(req.query.period) ? req.query.period : '7day';
 
     if (!API_KEY) {
         return res.status(500).json({ error: 'No API key provided' });
@@ -91,9 +92,10 @@ export default async function handler(req, res) {
         const topGenres = topArtists.length ? await fetchTopGenres(topArtists, API_KEY) : [];
         const totalScrobbles = userData?.user?.playcount || 0;
 
+        res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
         return res.status(200).json({ topArtists, topTracks, topGenres, totalScrobbles });
     } catch (err) {
         console.error('Music API Error:', err);
-        return res.status(500).json({ error: err.message });
+        return res.status(500).json({ error: 'Failed to load music stats' });
     }
 }

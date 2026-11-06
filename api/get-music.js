@@ -1,6 +1,6 @@
 export default async function handler(req, res) {
     const API_KEY = process.env.LFM_API_KEY;
-    const USER = process.env.LFM_USERNAME || 'arthonek';
+    const USER = encodeURIComponent(process.env.LFM_USERNAME || 'arthonek');
 
     if (!API_KEY) {
         return res.status(200).json({
@@ -26,6 +26,7 @@ export default async function handler(req, res) {
             || track.image?.[0]?.['#text'] 
             || '';
 
+        res.setHeader('Cache-Control', 'public, s-maxage=15, stale-while-revalidate=30');
         return res.status(200).json({
             name: track.name,
             artist: track.artist['#text'] || track.artist.name,
@@ -34,6 +35,6 @@ export default async function handler(req, res) {
             nowplaying: track['@attr']?.nowplaying === 'true'
         });
     } catch (err) {
-        return res.status(500).json({ error: err.message });
+        return res.status(500).json({ error: 'Failed to load track' });
     }
 }
