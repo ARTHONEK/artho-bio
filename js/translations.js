@@ -3,7 +3,7 @@ export const translations = {
         bio_desc: "просто случайный протоген из Нижнего Новгорода",
         main_tabs: ["Инфо", "Арты", "Лор", "Музыка", "Скиллы"],
         gallery_tabs: ["Галерея", "Референс"],
-        info_text: `Привет! Меня зовут <span>Артур</span>, мне <span id="age">...</span>. Живу в Нижнем Новгороде. В фурри-сообществе нахожусь примерно с осени 2023 года. Рад знакомству!`,
+        info_text: `Привет! Меня зовут <span>Артур</span>, мне <span class="tooltip-container"><span id="age">...</span><span class="tooltip-text">...</span></span>. Живу в Нижнем Новгороде. В фурри-сообществе нахожусь примерно с осени 2023 года. Рад знакомству!`,
         links: {
             tgc: "Личный тгк",
             tgdm: "Личка тг",
@@ -50,7 +50,7 @@ export const translations = {
         bio_desc: "just a random protogen from Nizhny Novgorod",
         main_tabs: ["Info", "Arts", "Lore", "Music", "Skills"],
         gallery_tabs: ["Gallery", "Reference"],
-        info_text: `Hi! My name is <span>Arthur</span>, I'm <span id="age">...</span>. I live in Nizhny Novgorod. I've been in the furry community since autumn 2023. Nice to meet you!`,
+        info_text: `Hi! My name is <span>Arthur</span>, I'm <span class="tooltip-container"><span id="age">...</span><span class="tooltip-text">...</span></span>. I live in Nizhny Novgorod. I've been in the furry community since autumn 2023. Nice to meet you!`,
         links: {
             tgc: "personal channel",
             tgdm: "telegram DM",

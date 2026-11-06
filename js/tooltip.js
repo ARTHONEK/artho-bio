@@ -1,22 +1,17 @@
 export function initAgeTooltip() {
-    const container = document.querySelector('.tooltip-container');
-    
-    if (!container) {
-        console.log('Контейнер подсказки не найден!');
-        return;
-    }
+    // Блок #info-text перерисовывается при смене языка,
+    // поэтому слушаем клики на document, а не на самом элементе
+    document.addEventListener('click', (event) => {
+        const container = event.target.closest('.tooltip-container');
 
-    // Обработка клика и тапа
-    container.addEventListener('click', (e) => {
-        e.stopPropagation();
-        container.classList.toggle('active');
-        console.log('Клик/тап по возрасту! Активен:', container.classList.contains('active'));
-    });
+        document.querySelectorAll('.tooltip-container.active').forEach((element) => {
+            if (element !== container) {
+                element.classList.remove('active');
+            }
+        });
 
-    // Закрытие при клике в любое другое место экрана
-    document.addEventListener('click', (e) => {
-        if (!container.contains(e.target)) {
-            container.classList.remove('active');
+        if (container) {
+            container.classList.toggle('active');
         }
     });
 }

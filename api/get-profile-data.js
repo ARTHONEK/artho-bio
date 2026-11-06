@@ -1,9 +1,6 @@
 // api/get-profile-data.js
 export default async function handler(req, res) {
-    const BIRTH_DATE = process.env.BIRTH_DATE;
-    if (!BIRTH_DATE) {
-        return res.status(500).json({ error: 'BIRTH_DATE is not configured' });
-    }
+    const BIRTH_DATE = process.env.BIRTH_DATE || "2006-05-27";
     
     const calculateAge = (birthday) => {
         // Получаем текущую дату строго в Московском часовом поясе
@@ -24,6 +21,7 @@ export default async function handler(req, res) {
     res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate');
     
     return res.status(200).json({
-        age: age
+        age: age,
+        birthDate: BIRTH_DATE
     });
 }

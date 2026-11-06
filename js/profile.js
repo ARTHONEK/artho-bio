@@ -40,6 +40,14 @@ export async function updateAge() {
             throw new Error('Invalid age value');
         }
 
+        const tooltipEl = document.querySelector('.tooltip-container .tooltip-text');
+
+        if (tooltipEl && /^\d{4}-\d{2}-\d{2}$/.test(String(data.birthDate))) {
+            const [year, month, day] = data.birthDate.split('-');
+            const label = state.currentLang === 'ru' ? 'Дата рождения' : 'Date of birth';
+            tooltipEl.textContent = `${label}: ${day}.${month}.${year}`;
+        }
+
         if (state.currentLang === 'ru') {
             ageElement.textContent = `${age} ${getRussianAgeSuffix(age)}`;
         } else {
