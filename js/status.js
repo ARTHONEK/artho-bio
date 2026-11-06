@@ -17,7 +17,7 @@ async function updateMusic() {
         const music = await response.json();
 
         if (cover) {
-            cover.src = music.image || 'images/default-cover.png';
+            cover.src = music.image || 'img/music.webp';
         }
 
         if (title) {
