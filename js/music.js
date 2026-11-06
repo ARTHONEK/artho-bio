@@ -1,98 +1,100 @@
-import { state } from './state.js';
+import { DISCORD_ID, state } from './state.js';
 import { translations } from './translations.js';
-import { escapeHTML } from './utils.js';
 
-const musicCache = {};
-let currentPeriod = '7day';
+async function updateMusic() {
+    const cover = document.getElementById('track-cover');
+    const title = document.getElementById('track-title-full');
+    const album = document.getElementById('track-album');
+    const artist = document.getElementById('track-artist');
 
-export async function loadMusicStats(selectedPeriod = currentPeriod) {
-    const container = document.getElementById('music-tab-content');
-    if (!container) return;
+    try {
+        const response = await fetch('/api/get-music');
 
-    currentPeriod = selectedPeriod;
+        if (!response.ok) {
+            throw new Error('Music API error');
+        }
+
+        const music = await response.json();
+
+        if (cover) {
+            cover.src = music.image || 'img/music.webp';
+        }
+
+        if (title) {
+            title.textContent = music.name || (
+                state.currentLang === 'ru' ? 'Тишина в эфире' : 'Silence'
+            );
+        }
+
+        if (album) {
+            album.textContent = music.album || (music.name ? 'Single / Album N/A' : '—');
+        }
+
+        if (artist) {
+            artist.textContent = music.artist || '—';
+        }
+    } catch (error) {
+        console.error('Ошибка Last.fm:', error);
+
+        if (title) {
+            title.textContent = state.currentLang === 'ru' ? 'Ошибка связи' : 'Comms Error';
+        }
+        if (artist) artist.textContent = '—';
+        if (album) album.textContent = '—';
+    }
+}
+
+async function updateDiscord() {
+    const gameElement = document.getElementById('game-name');
     const t = translations[state.currentLang];
 
     try {
-        if (!musicCache[currentPeriod]) {
-            const response = await fetch(`/api/get-music-stats?period=${currentPeriod}`);
-            if (!response.ok) throw new Error('Music stats error');
-            musicCache[currentPeriod] = await response.json();
+        const response = await fetch(`https://api.lanyard.rest/v1/users/${DISCORD_ID}`);
+
+        if (!response.ok) {
+            throw new Error('Lanyard API error');
         }
 
-        const { topArtists = [], topTracks = [], topGenres = [], totalScrobbles = 0 } = musicCache[currentPeriod];
+        const result = await response.json();
 
-        const genresHtml = topGenres.length 
-            ? `<div class="top-genres-container">
-                <span class="genres-label">🏷️ ${t.top_genres}:</span>
-                <div class="genres-list">
-                    ${topGenres.map(g => `<span class="genre-badge">${escapeHTML(g)}</span>`).join('')}
-                </div>
-               </div>`
-            : '';
+        if (!result.success || !result.data) {
+            return;
+        }
 
-        const artistsHtml = topArtists.length 
-            ? topArtists.map((artist, idx) => `
-                <div class="music-card top-artist-card">
-                    <span class="rank-num">#${idx + 1}</span>
-                    <div class="artist-info">
-                        <div class="artist-name">${escapeHTML(artist.name)}</div>
-                        <div class="artist-playcount">${artist.playcount} ${t.plays_unit}</div>
-                    </div>
-                </div>
-            `).join('')
-            : `<div class="empty-list">${t.no_music_data}</div>`;
+        const presence = result.data;
+        const statusDot = document.getElementById('discord-status-dot');
 
-        const tracksHtml = topTracks.length 
-            ? topTracks.map((track, idx) => `
-                <div class="music-card top-track-card">
-                    <span class="rank-num">#${idx + 1}</span>
-                    <img src="${track.image || 'img/music.webp'}" alt="${escapeHTML(track.name)}" class="track-cover" width="50" height="50" loading="lazy">
-                    <div class="track-info">
-                        <div class="track-title-full">${escapeHTML(track.name)}</div>
-                        <div class="track-artist">${escapeHTML(track.artist)}</div>
-                        <div class="track-album">${track.playcount} ${t.plays_unit}</div>
-                    </div>
-                </div>
-            `).join('')
-            : `<div class="empty-list">${t.no_music_data}</div>`;
+        if (statusDot && presence.discord_status) {
+            statusDot.className = `status-dot ${presence.discord_status}`;
+        }
 
-        container.innerHTML = `
-            <div class="music-dashboard">
-                <div class="music-header-bar">
-                    <span class="scrobbles-badge">${t.scrobbles_count}: <strong>${totalScrobbles}</strong></span>
-                    ${genresHtml}
-                </div>
+        const game = presence.activities?.find(activity => activity.type === 0);
 
-                <div class="period-selector">
-                    <button class="period-btn ${currentPeriod === '7day' ? 'active' : ''}" data-period="7day">${t.period_7day}</button>
-                    <button class="period-btn ${currentPeriod === '1month' ? 'active' : ''}" data-period="1month">${t.period_1month}</button>
-                    <button class="period-btn ${currentPeriod === 'overall' ? 'active' : ''}" data-period="overall">${t.period_overall}</button>
-                </div>
-                
-                <div class="music-grid">
-                    <div class="music-section">
-                        <h4>🎵 ${t.top_tracks}</h4>
-                        <div class="rank-list">${tracksHtml}</div>
-                    </div>
-                    <div class="music-section">
-                        <h4>🔥 ${t.top_artists}</h4>
-                        <div class="rank-list">${artistsHtml}</div>
-                    </div>
-                </div>
-            </div>
-        `;
+        if (!gameElement) return;
 
-        container.querySelectorAll('.period-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const period = e.target.getAttribute('data-period');
-                if (period !== currentPeriod) {
-                    loadMusicStats(period);
-                }
-            });
-        });
-
+        if (game) {
+            let text = ` ${t.playing_in} ${game.name}`;
+            if (game.details) {
+                text += ` (${game.details})`;
+            }
+            gameElement.textContent = text;
+        } else {
+            gameElement.textContent = ` ${t.game_silence}`;
+        }
     } catch (error) {
-        console.error('Ошибка загрузки статистики:', error);
-        container.innerHTML = `<div class="error-text">${t.no_music_data}</div>`;
+        console.error('Ошибка Discord:', error);
+
+        if (gameElement) {
+            gameElement.textContent = state.currentLang === 'ru'
+                ? ' Отдыхает от игр'
+                : ' Not gaming';
+        }
     }
+}
+
+export async function updateDiscordStatus() {
+    await Promise.allSettled([
+        updateMusic(),
+        updateDiscord()
+    ]);
 }

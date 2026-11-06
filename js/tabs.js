@@ -9,6 +9,7 @@ export function openTab(tabName, button) {
 
     document.querySelectorAll('#main-tabs .tab-btn').forEach(tabButton => {
         tabButton.classList.remove('active');
+        tabButton.setAttribute('aria-selected', 'false');
     });
 
     const targetTab = document.getElementById(tabName);
@@ -19,6 +20,7 @@ export function openTab(tabName, button) {
 
     if (button) {
         button.classList.add('active');
+        button.setAttribute('aria-selected', 'true');
     }
 
     if (tabName === 'gallery' || tabName === 'achieve') {
@@ -41,9 +43,11 @@ export function openSubTab(subTabId, button) {
 
     parent.querySelectorAll('.tab-btn').forEach(tabButton => {
         tabButton.classList.remove('active');
+        tabButton.setAttribute('aria-selected', 'false');
     });
 
     button.classList.add('active');
+    button.setAttribute('aria-selected', 'true');
 
     const isGalleryTab = parent.id === 'gallery-sub-tabs';
     const contentSelector = isGalleryTab

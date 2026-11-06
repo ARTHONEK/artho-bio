@@ -1,6 +1,9 @@
 // api/get-profile-data.js
 export default async function handler(req, res) {
-    const BIRTH_DATE = "2006-05-27"; // Твоя дата рождения
+    const BIRTH_DATE = process.env.BIRTH_DATE;
+    if (!BIRTH_DATE) {
+        return res.status(500).json({ error: 'BIRTH_DATE is not configured' });
+    }
     
     const calculateAge = (birthday) => {
         // Получаем текущую дату строго в Московском часовом поясе

@@ -7,7 +7,8 @@ export function initGallery() {
     );
 
     state.currentGalleryImages.forEach((image, index) => {
-        image.onclick = () => {
+        const trigger = image.closest('button') || image;
+        trigger.onclick = () => {
             state.currentImgIndex = index;
             showImageInLightbox();
             openLightbox();

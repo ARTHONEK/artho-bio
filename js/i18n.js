@@ -102,7 +102,7 @@ export async function applyLanguage() {
 export async function initLanguage() {
     const savedLang = localStorage.getItem('site_lang');
 
-    if (savedLang) {
+    if (savedLang === 'ru' || savedLang === 'en') {
         state.currentLang = savedLang;
     } else {
         const hostname = window.location.hostname;
