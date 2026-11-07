@@ -7,7 +7,7 @@ h1 {
 }
 
 .bio-text {
-  margin: 0 0 25px;
+  margin: 0 0 16px;
   font-size: 0.9rem;
   opacity: 0.8;
 }
@@ -15,16 +15,21 @@ h1 {
 .gallery-title {
   margin: 0 0 12px;
   text-align: left;
-  font-size: 0.75rem;
+  font-size: 0.82rem;
   font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
+  letter-spacing: 0.5px;
   color: var(--accent-color);
-  opacity: 0.9;
+}
+
+/* Приглашение терминала вместо капса: смысл («это поток данных»), а не декор */
+.gallery-title::before {
+  content: "> ";
+  content: "> " / "";
+  opacity: 0.6;
 }
 
 .ai-credit {
   margin-top: 40px;
   font-size: 0.7rem;
-  opacity: 0.3;
+  opacity: 0.55;
 }

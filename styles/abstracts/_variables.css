@@ -6,6 +6,7 @@
   --card-bg: rgba(20, 20, 30, 0.7);
   --card-border: rgba(0, 255, 102, 0.2);
   --hex-color: rgba(0, 255, 102, 0.05);
+  --text-muted: rgba(226, 232, 240, 0.62); /* вторичный текст, контраст ≥ 6:1 */
   --transition-fast: 0.2s ease;
   --transition-normal: 0.3s ease;
 }

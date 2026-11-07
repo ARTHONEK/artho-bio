@@ -1,0 +1,21 @@
+/* Мелкие правки поверх _main.css (подключается после него) */
+
+/* На телефоне hover после тапа не залипает */
+@media (hover: none) {
+  .gallery-item:hover, .achieve-item:hover {
+    transform: none;
+    border-color: rgba(255, 255, 255, 0.08);
+    box-shadow: none;
+  }
+}
+
+/* Отклик на нажатие арта */
+.gallery-item:active, .achieve-item:active { transform: scale(0.97); }
+
+/* Время в логе: контраст >= 4.5:1 */
+.live-log .log-time { color: var(--text-muted); }
+
+/* На десктопе строки короче ~75 символов */
+@media (min-width: 768px) {
+  .container { max-width: 720px; }
+}
