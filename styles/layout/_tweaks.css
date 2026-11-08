@@ -19,3 +19,47 @@
 @media (min-width: 768px) {
   .container { max-width: 720px; }
 }
+
+
+/* ===== Трек: «сейчас играет» / «последний трек» ===== */
+.track-state {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.65rem;
+  color: var(--text-muted);
+}
+
+/* Не играет: приглушённая обложка и ничего не движется */
+.music-card:not(.is-playing) .track-cover {
+  filter: grayscale(0.6);
+  border-color: var(--card-border);
+}
+
+/* Играет: акцентный цвет, свечение обложки и эквалайзер */
+.music-card.is-playing .track-state { color: var(--accent-color); }
+.music-card.is-playing .track-cover { box-shadow: 0 0 12px var(--accent-glow); }
+
+.eq {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 10px;
+}
+
+.eq i {
+  width: 2px;
+  height: 100%;
+  background: currentColor;
+  border-radius: 1px;
+  transform-origin: bottom;
+  animation: eq-bar 0.9s ease-in-out infinite;
+}
+
+.eq i:nth-child(2) { animation-delay: -0.3s; }
+.eq i:nth-child(3) { animation-delay: -0.6s; }
+
+@keyframes eq-bar {
+  0%, 100% { transform: scaleY(0.3); }
+  50%      { transform: scaleY(1); }
+}
