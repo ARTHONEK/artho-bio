@@ -8,7 +8,7 @@ const formReadyAt = Date.now();
 // ===== Cloudflare Turnstile =====
 // Публичный ключ сайта (Site Key) из панели Cloudflare. Его можно хранить в коде.
 // Пока стоит YOUR_SITE_KEY, капча на сайте выключена.
-const TURNSTILE_SITE_KEY = '0x4AAAAAAF8n_p_GrnpiX_2r';
+const TURNSTILE_SITE_KEY = 'YOUR_SITE_KEY';
 const CAPTCHA_ENABLED = TURNSTILE_SITE_KEY !== 'YOUR_SITE_KEY';
 const TURNSTILE_SCRIPT = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
 
@@ -77,7 +77,7 @@ async function getTurnstileToken() {
             theme: 'dark',
             language: state.currentLang === 'ru' ? 'ru' : 'en',
             callback: (token) => finish(resolve, token),
-            'error-callback': () => finish(reject, new Error('Captcha error'))
+            'error-callback': (errorCode) => finish(reject, new Error(`Captcha error ${errorCode ?? ''}`.trim()))
         });
 
         turnstile.execute(widgetId);
@@ -188,9 +188,9 @@ export async function sendMessageToTG(event) {
                 turnstileToken = await getTurnstileToken();
             } catch (captchaError) {
                 console.error('Turnstile:', captchaError);
-                alert(isRu
+                alert((isRu
                     ? 'Не удалось пройти проверку. Обновите страницу и попробуйте ещё раз.'
-                    : 'Verification failed. Reload the page and try again.');
+                    : 'Verification failed. Reload the page and try again.') + `\n(${captchaError.message})`);
                 return;
             }
         }
