@@ -8,7 +8,7 @@ const formReadyAt = Date.now();
 // ===== Cloudflare Turnstile =====
 // Публичный ключ сайта (Site Key) из панели Cloudflare. Его можно хранить в коде.
 // Пока стоит YOUR_SITE_KEY, капча на сайте выключена.
-const TURNSTILE_SITE_KEY = 'YOUR_SITE_KEY';
+const TURNSTILE_SITE_KEY = '0x4AAAAAAF8n_p_GrnpiX_2r';
 const CAPTCHA_ENABLED = TURNSTILE_SITE_KEY !== 'YOUR_SITE_KEY';
 const TURNSTILE_SCRIPT = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
 
