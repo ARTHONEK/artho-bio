@@ -28,6 +28,30 @@ function escapeTelegramHtml(value = '') {
     .replace(/>/g, '&gt;');
 }
 
+// Проверка токена Cloudflare Turnstile на сервере (клиенту доверять нельзя)
+async function verifyTurnstile(secret, token, ip) {
+  if (typeof token !== 'string' || !token || token.length > 2048) {
+    return false;
+  }
+
+  try {
+    const body = new URLSearchParams({ secret, response: token });
+    if (ip) body.set('remoteip', ip);
+
+    const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'POST',
+      body,
+      signal: AbortSignal.timeout(8000)
+    });
+
+    const result = await response.json();
+    return result.success === true;
+  } catch (error) {
+    console.error('Turnstile verify error:', error);
+    return false;
+  }
+}
+
 export default async function handler(req, res) {
 
   if (req.method === 'OPTIONS') {
@@ -38,11 +62,28 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
-  const { name, contact = '', message } = req.body || {};
+  const { name, contact = '', message, website = '', fillTime } = req.body || {};
 
   const cleanName = String(name || '').trim();
   const cleanContact = String(contact || '').trim();
   const cleanMessage = String(message || '').trim();
+
+  // --- Антиспам ---
+  // 1) Honeypot: человек не видит это поле, а боты его заполняют.
+  //    Делаем вид, что всё хорошо, чтобы бот не понял, что его раскусили.
+  if (website) {
+    return res.status(200).json({ success: true, message: 'Message sent successfully!' });
+  }
+
+  // 2) Время заполнения: сайт присылает fillTime. Прямые запросы в API
+  //    (без него) и слишком быстрые отправки отклоняем.
+  const filledIn = Number(fillTime);
+  if (!Number.isFinite(filledIn) || filledIn < 3000) {
+    return res.status(400).json({
+      error: 'TooFast',
+      message: 'Слишком быстро или страница устарела: обновите страницу и попробуйте снова. / Too fast or outdated page: reload and try again.'
+    });
+  }
 
   if (!cleanName || !cleanMessage) {
     return res.status(400).json({ error: 'Name and message are required' });
@@ -60,6 +101,21 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Message is too long' });
   }
 
+  // Ссылки в имени и сообщении (клиент покажет t.link_error)
+  const urlPattern = /(https?:\/\/|www\.|\bt\.me\/|\btelegram\.me\/|\bwa\.me\/|tg:\/\/)/i;
+  if (urlPattern.test(cleanName) || urlPattern.test(cleanMessage)) {
+    return res.status(400).json({ error: 'Forbidden content' });
+  }
+
+  // Номера телефонов в тексте: типичный спам. Для контактов есть отдельное поле
+  const phonePattern = /(?:\+?\d[\s\-().]*){10,}/;
+  if (phonePattern.test(cleanName) || phonePattern.test(cleanMessage)) {
+    return res.status(400).json({
+      error: 'Phone in message',
+      message: 'Контакты укажите в отдельном поле (галочка ниже). / Please put contacts in the contacts field.'
+    });
+  }
+
   const forwardedFor = req.headers['x-forwarded-for'];
   const ip = typeof forwardedFor === 'string'
     ? forwardedFor.split(',')[0].trim()
@@ -68,6 +124,21 @@ export default async function handler(req, res) {
   const sanitizedIp = ip.replace(/[.:#$[\]]/g, '_');
   const now = Date.now();
   const cooldownMs = 150 * 1000;
+
+  // --- Капча (Cloudflare Turnstile) ---
+  // Если TURNSTILE_SECRET_KEY не задан в Vercel, проверка отключена
+  const turnstileSecret = process.env.TURNSTILE_SECRET_KEY;
+  if (turnstileSecret) {
+    const captchaOk = await verifyTurnstile(turnstileSecret, req.body?.turnstileToken, ip);
+    if (!captchaOk) {
+      return res.status(400).json({
+        error: 'CaptchaFailed',
+        message: 'Проверка не пройдена. Обновите страницу и попробуйте снова. / Verification failed. Reload the page and try again.'
+      });
+    }
+  } else {
+    console.warn('TURNSTILE_SECRET_KEY is not set: captcha check is disabled');
+  }
 
   try {
     if (admin.apps.length) {

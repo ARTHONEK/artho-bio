@@ -63,3 +63,24 @@
   0%, 100% { transform: scaleY(0.3); }
   50%      { transform: scaleY(1); }
 }
+
+
+/* Ловушка для спам-ботов: скрыта от людей и скринридеров */
+.hp-field {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+
+/* Контейнер капчи Turnstile. Пустой, пока Cloudflare не потребует действия.
+   order нужен, потому что у .form-box дети упорядочены через order */
+.captcha-box {
+  order: 4;
+  display: flex;
+  justify-content: center;
+  margin-top: -12px; /* компенсирует gap формы, когда контейнер пустой */
+}
