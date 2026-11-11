@@ -37,7 +37,7 @@ function setCaptchaStatus(message = '') {
     }
 }
 
-// Загрузка Cloudflare Turnstile с таймаутом
+// Загрузка Cloudflare Turnstile
 function loadTurnstile() {
     if (window.turnstile) {
         return Promise.resolve(window.turnstile);
@@ -50,12 +50,13 @@ function loadTurnstile() {
 
             const timeout = setTimeout(() => {
                 if (finished) return;
-                finished = true;
 
+                finished = true;
                 script.remove();
                 turnstileScriptPromise = null;
-                reject(new Error('Turnstile script loading timeout'));
-            }, 15000);
+
+                reject(new Error('Turnstile script load timeout'));
+            }, 20000);
 
             script.src = TURNSTILE_SCRIPT;
             script.async = true;
@@ -66,21 +67,22 @@ function loadTurnstile() {
 
                 const api = window.turnstile;
 
-                if (!api?.ready) {
+                if (!api || !api.render || !api.execute) {
                     finished = true;
                     clearTimeout(timeout);
                     turnstileScriptPromise = null;
+
                     reject(new Error('Turnstile API unavailable'));
                     return;
                 }
 
-                api.ready(() => {
-                    if (finished) return;
+                // Скрипт загрузился — используем API напрямую
+                finished = true;
+                clearTimeout(timeout);
 
-                    finished = true;
-                    clearTimeout(timeout);
-                    resolve(api);
-                });
+                console.log('[Turnstile] Script loaded successfully');
+
+                resolve(api);
             };
 
             script.onerror = () => {
@@ -91,7 +93,7 @@ function loadTurnstile() {
                 script.remove();
                 turnstileScriptPromise = null;
 
-                reject(new Error('Turnstile script failed to load'));
+                reject(new Error('Turnstile script network error'));
             };
 
             document.head.appendChild(script);
@@ -104,10 +106,6 @@ function loadTurnstile() {
 // Получение токена капчи
 async function getTurnstileToken() {
     const turnstile = await loadTurnstile();
-
-    if (!turnstile?.render || !turnstile?.execute) {
-        throw new Error('Turnstile API is incomplete');
-    }
 
     let box = document.getElementById('captcha-box');
 
@@ -193,6 +191,8 @@ async function getTurnstileToken() {
     });
 }
 
+// ===== Контактное поле =====
+
 export function toggleContactInput() {
     const checkbox = document.getElementById('leave-contacts');
     const input = document.getElementById('user-contact');
@@ -206,8 +206,11 @@ export function toggleContactInput() {
     }
 }
 
+// ===== Таймер отправки =====
+
 export function startTimer(seconds) {
     state.isCooldown = true;
+
     const button = document.getElementById('send-btn');
     let timeLeft = Math.floor(seconds);
 
@@ -217,6 +220,7 @@ export function startTimer(seconds) {
 
     const updateButton = () => {
         if (!button) return;
+
         button.textContent = timeLeft;
         button.disabled = true;
         button.style.opacity = '0.5';
@@ -248,6 +252,7 @@ export function startTimer(seconds) {
 
 export function checkCooldown() {
     const finish = localStorage.getItem('cooldownFinish');
+
     if (!finish) return;
 
     const seconds = Math.floor((Number(finish) - Date.now()) / 1000);
@@ -259,6 +264,8 @@ export function checkCooldown() {
     }
 }
 
+// ===== Отправка сообщения =====
+
 export async function sendMessageToTG(event) {
     if (event) {
         event.preventDefault();
@@ -267,12 +274,14 @@ export async function sendMessageToTG(event) {
     if (state.isCooldown || isSending) return;
 
     const t = translations[state.currentLang];
+
     const messageInput = document.getElementById('user-input');
     const nameInput = document.getElementById('user-name');
     const contactInput = document.getElementById('user-contact');
     const checkbox = document.getElementById('leave-contacts');
 
     const message = messageInput?.value.trim();
+
     if (!message) return;
 
     const name = nameInput?.value.trim() || 'Аноним';
@@ -285,6 +294,7 @@ export async function sendMessageToTG(event) {
 
     const sendButton = document.getElementById('send-btn');
     const isRu = state.currentLang === 'ru';
+
     let turnstileToken = '';
 
     isSending = true;
@@ -294,7 +304,8 @@ export async function sendMessageToTG(event) {
     }
 
     try {
-        // Проверка Cloudflare
+        // ===== Проверка Cloudflare =====
+
         if (CAPTCHA_ENABLED) {
             setCaptchaStatus(
                 isRu
@@ -331,7 +342,8 @@ export async function sendMessageToTG(event) {
             }
         }
 
-        // Отправка на сервер
+        // ===== Отправка на сервер =====
+
         const response = await fetch('/api/send-to-tg', {
             method: 'POST',
             headers: {
@@ -356,7 +368,10 @@ export async function sendMessageToTG(event) {
                 localStorage.setItem('cooldownFinish', String(finish));
                 startTimer(error.retryAfter);
 
-                alert(error.message || `Подождите еще ${error.retryAfter} сек.`);
+                alert(
+                    error.message || `Подождите еще ${error.retryAfter} сек.`
+                );
+
                 return;
             }
 
@@ -369,7 +384,8 @@ export async function sendMessageToTG(event) {
             return;
         }
 
-        // Успешная отправка
+        // ===== Успешная отправка =====
+
         if (messageInput) messageInput.value = '';
         if (nameInput) nameInput.value = '';
         if (contactInput) contactInput.value = '';
@@ -378,13 +394,16 @@ export async function sendMessageToTG(event) {
         toggleContactInput();
 
         const finish = Date.now() + 150000;
+
         localStorage.setItem('cooldownFinish', String(finish));
+
         startTimer(150);
 
         setCaptchaStatus('');
+
         alert(t.send_success);
 
-        // Ошибка журнала не должна отменять успешную отправку
+        // Ошибка журнала не отменяет успешную отправку
         try {
             await updateLiveLog();
         } catch (error) {
@@ -397,6 +416,7 @@ export async function sendMessageToTG(event) {
 
     } finally {
         isSending = false;
+
         setCaptchaStatus('');
 
         if (sendButton && !state.isCooldown) {
@@ -404,6 +424,8 @@ export async function sendMessageToTG(event) {
         }
     }
 }
+
+// ===== Инициализация формы =====
 
 export function initContactForm() {
     const checkbox = document.getElementById('leave-contacts');
@@ -419,6 +441,7 @@ export function initContactForm() {
     // Honeypot: невидимое поле-ловушка для ботов
     if (form && !document.getElementById('hp-field')) {
         const trap = document.createElement('input');
+
         trap.type = 'text';
         trap.name = 'website';
         trap.id = 'hp-field';
@@ -426,6 +449,7 @@ export function initContactForm() {
         trap.tabIndex = -1;
         trap.autocomplete = 'off';
         trap.setAttribute('aria-hidden', 'true');
+
         form.append(trap);
     }
 
