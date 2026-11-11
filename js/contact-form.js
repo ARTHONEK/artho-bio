@@ -1,3 +1,4 @@
+
 import { state } from './state.js';
 import { translations } from './translations.js';
 import { updateLiveLog } from './live-log.js';
@@ -6,81 +7,189 @@ import { updateLiveLog } from './live-log.js';
 const formReadyAt = Date.now();
 
 // ===== Cloudflare Turnstile =====
-// Публичный ключ сайта (Site Key) из панели Cloudflare. Его можно хранить в коде.
-// Пока стоит YOUR_SITE_KEY, капча на сайте выключена.
 const TURNSTILE_SITE_KEY = '0x4AAAAAAF8n_p_GrnpiX_2r';
 const CAPTCHA_ENABLED = TURNSTILE_SITE_KEY !== 'YOUR_SITE_KEY';
-const TURNSTILE_SCRIPT = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+const TURNSTILE_SCRIPT =
+    'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
 
 let turnstileScriptPromise = null;
 let isSending = false;
 
-// Скрипт Cloudflare грузим только при первом нажатии «Отправить»
+// Статус проверки под кнопкой
+function setCaptchaStatus(message = '') {
+    const button = document.getElementById('send-btn');
+    if (!button) return;
+
+    let status = document.getElementById('captcha-status');
+
+    if (!status && message) {
+        status = document.createElement('div');
+        status.id = 'captcha-status';
+        status.className = 'captcha-status';
+        status.style.cssText =
+            'font-size:13px;margin-top:8px;text-align:center;opacity:.8;';
+        button.insertAdjacentElement('afterend', status);
+    }
+
+    if (status) {
+        status.textContent = message;
+        status.hidden = !message;
+    }
+}
+
+// Загрузка Cloudflare Turnstile с таймаутом
 function loadTurnstile() {
-    if (window.turnstile) return Promise.resolve(window.turnstile);
+    if (window.turnstile) {
+        return Promise.resolve(window.turnstile);
+    }
 
     if (!turnstileScriptPromise) {
         turnstileScriptPromise = new Promise((resolve, reject) => {
             const script = document.createElement('script');
+            let finished = false;
+
+            const timeout = setTimeout(() => {
+                if (finished) return;
+                finished = true;
+
+                script.remove();
+                turnstileScriptPromise = null;
+                reject(new Error('Turnstile script loading timeout'));
+            }, 15000);
+
             script.src = TURNSTILE_SCRIPT;
             script.async = true;
+            script.defer = true;
+
             script.onload = () => {
+                if (finished) return;
+
                 const api = window.turnstile;
-                if (api?.ready) {
-                    api.ready(() => resolve(api));
-                } else {
-                    resolve(api);
+
+                if (!api?.ready) {
+                    finished = true;
+                    clearTimeout(timeout);
+                    turnstileScriptPromise = null;
+                    reject(new Error('Turnstile API unavailable'));
+                    return;
                 }
+
+                api.ready(() => {
+                    if (finished) return;
+
+                    finished = true;
+                    clearTimeout(timeout);
+                    resolve(api);
+                });
             };
+
             script.onerror = () => {
+                if (finished) return;
+
+                finished = true;
+                clearTimeout(timeout);
+                script.remove();
                 turnstileScriptPromise = null;
+
                 reject(new Error('Turnstile script failed to load'));
             };
-            document.head.append(script);
+
+            document.head.appendChild(script);
         });
     }
 
     return turnstileScriptPromise;
 }
 
-// Получает одноразовый токен. Виджет показывается только если Cloudflare
-// сочтёт посетителя подозрительным (appearance: interaction-only)
+// Получение токена капчи
 async function getTurnstileToken() {
     const turnstile = await loadTurnstile();
 
+    if (!turnstile?.render || !turnstile?.execute) {
+        throw new Error('Turnstile API is incomplete');
+    }
+
     let box = document.getElementById('captcha-box');
+
     if (!box) {
         box = document.createElement('div');
         box.id = 'captcha-box';
         box.className = 'captcha-box';
+
         document.getElementById('send-btn')?.before(box);
     }
 
     return new Promise((resolve, reject) => {
         let widgetId = null;
         let timer = null;
+        let finished = false;
 
         const finish = (callback, value) => {
+            if (finished) return;
+            finished = true;
+
             clearTimeout(timer);
+
             if (widgetId !== null) {
-                try { turnstile.remove(widgetId); } catch { /* уже удалён */ }
+                try {
+                    turnstile.remove(widgetId);
+                } catch (error) {
+                    console.warn('Turnstile cleanup:', error);
+                }
             }
+
+            box.innerHTML = '';
             callback(value);
         };
 
-        timer = setTimeout(() => finish(reject, new Error('Captcha timeout')), 60_000);
+        timer = setTimeout(() => {
+            finish(
+                reject,
+                new Error('Captcha timeout (15 seconds)')
+            );
+        }, 15000);
 
-        widgetId = turnstile.render(box, {
-            sitekey: TURNSTILE_SITE_KEY,
-            execution: 'execute',
-            appearance: 'interaction-only',
-            theme: 'dark',
-            language: state.currentLang === 'ru' ? 'ru' : 'en',
-            callback: (token) => finish(resolve, token),
-            'error-callback': (errorCode) => finish(reject, new Error(`Captcha error ${errorCode ?? ''}`.trim()))
-        });
+        try {
+            widgetId = turnstile.render(box, {
+                sitekey: TURNSTILE_SITE_KEY,
+                execution: 'execute',
+                appearance: 'interaction-only',
+                theme: 'dark',
+                language: state.currentLang === 'ru' ? 'ru' : 'en',
 
-        turnstile.execute(widgetId);
+                callback: (token) => {
+                    if (token) {
+                        finish(resolve, token);
+                    } else {
+                        finish(reject, new Error('Empty captcha token'));
+                    }
+                },
+
+                'error-callback': (errorCode) => {
+                    finish(
+                        reject,
+                        new Error(`Captcha error: ${errorCode ?? 'unknown'}`)
+                    );
+                },
+
+                'expired-callback': () => {
+                    finish(reject, new Error('Captcha token expired'));
+                },
+
+                'timeout-callback': () => {
+                    finish(reject, new Error('Captcha interaction timeout'));
+                }
+            });
+
+            if (widgetId === undefined || widgetId === null) {
+                throw new Error('Failed to render Turnstile widget');
+            }
+
+            turnstile.execute(widgetId);
+
+        } catch (error) {
+            finish(reject, error);
+        }
     });
 }
 
@@ -155,7 +264,7 @@ export async function sendMessageToTG(event) {
         event.preventDefault();
     }
 
-    if (state.isCooldown) return;
+    if (state.isCooldown || isSending) return;
 
     const t = translations[state.currentLang];
     const messageInput = document.getElementById('user-input');
@@ -166,35 +275,63 @@ export async function sendMessageToTG(event) {
     const message = messageInput?.value.trim();
     if (!message) return;
 
-    let name = nameInput?.value.trim() || 'Аноним';
+    const name = nameInput?.value.trim() || 'Аноним';
+
     let contact = '';
 
     if (checkbox?.checked && contactInput?.value.trim()) {
         contact = contactInput.value.trim();
     }
 
-    if (isSending) return;
-
     const sendButton = document.getElementById('send-btn');
     const isRu = state.currentLang === 'ru';
     let turnstileToken = '';
 
     isSending = true;
-    if (sendButton) sendButton.disabled = true;
+
+    if (sendButton) {
+        sendButton.disabled = true;
+    }
 
     try {
+        // Проверка Cloudflare
         if (CAPTCHA_ENABLED) {
+            setCaptchaStatus(
+                isRu
+                    ? 'Проверка безопасности...'
+                    : 'Security verification...'
+            );
+
             try {
                 turnstileToken = await getTurnstileToken();
+
+                setCaptchaStatus(
+                    isRu
+                        ? 'Проверка пройдена!'
+                        : 'Verification successful!'
+                );
+
             } catch (captchaError) {
                 console.error('Turnstile:', captchaError);
-                alert((isRu
-                    ? 'Не удалось пройти проверку. Обновите страницу и попробуйте ещё раз.'
-                    : 'Verification failed. Reload the page and try again.') + `\n(${captchaError.message})`);
+
+                setCaptchaStatus(
+                    isRu
+                        ? 'Ошибка проверки. Попробуйте ещё раз.'
+                        : 'Verification failed. Please try again.'
+                );
+
+                alert(
+                    (isRu
+                        ? 'Не удалось пройти проверку. Обновите страницу и попробуйте ещё раз.'
+                        : 'Verification failed. Reload the page and try again.')
+                    + `\n(${captchaError.message})`
+                );
+
                 return;
             }
         }
 
+        // Отправка на сервер
         const response = await fetch('/api/send-to-tg', {
             method: 'POST',
             headers: {
@@ -214,9 +351,11 @@ export async function sendMessageToTG(event) {
             const error = await response.json().catch(() => ({}));
 
             if (response.status === 429 && error.retryAfter) {
-                const finish = Date.now() + (error.retryAfter * 1000);
+                const finish = Date.now() + error.retryAfter * 1000;
+
                 localStorage.setItem('cooldownFinish', String(finish));
                 startTimer(error.retryAfter);
+
                 alert(error.message || `Подождите еще ${error.retryAfter} сек.`);
                 return;
             }
@@ -226,27 +365,40 @@ export async function sendMessageToTG(event) {
                     ? t.link_error
                     : (error.message || 'Ошибка отправки')
             );
+
             return;
         }
 
+        // Успешная отправка
         if (messageInput) messageInput.value = '';
         if (nameInput) nameInput.value = '';
         if (contactInput) contactInput.value = '';
         if (checkbox) checkbox.checked = false;
 
         toggleContactInput();
-        alert(t.send_success);
 
-        const finish = Date.now() + 150_000;
+        const finish = Date.now() + 150000;
         localStorage.setItem('cooldownFinish', String(finish));
         startTimer(150);
 
-        await updateLiveLog();
+        setCaptchaStatus('');
+        alert(t.send_success);
+
+        // Ошибка журнала не должна отменять успешную отправку
+        try {
+            await updateLiveLog();
+        } catch (error) {
+            console.error('Ошибка обновления журнала:', error);
+        }
+
     } catch (error) {
         console.error('Ошибка отправки:', error);
         alert('Ошибка сервера');
+
     } finally {
         isSending = false;
+        setCaptchaStatus('');
+
         if (sendButton && !state.isCooldown) {
             sendButton.disabled = false;
         }
@@ -264,7 +416,7 @@ export function initContactForm() {
     form?.addEventListener('submit', sendMessageToTG);
     button?.addEventListener('click', sendMessageToTG);
 
-    // Honeypot: невидимое поле-ловушка для ботов (люди его не видят и не заполняют)
+    // Honeypot: невидимое поле-ловушка для ботов
     if (form && !document.getElementById('hp-field')) {
         const trap = document.createElement('input');
         trap.type = 'text';
