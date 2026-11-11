@@ -31,7 +31,7 @@ function escapeTelegramHtml(value = '') {
 // Проверка токена Cloudflare Turnstile на сервере (клиенту доверять нельзя)
 async function verifyTurnstile(secret, token, ip) {
   if (typeof token !== 'string' || !token || token.length > 2048) {
-    return false;
+    return { ok: false, codes: ['missing-token'] };
   }
 
   try {
@@ -45,10 +45,10 @@ async function verifyTurnstile(secret, token, ip) {
     });
 
     const result = await response.json();
-    return result.success === true;
+    return { ok: result.success === true, codes: result['error-codes'] || [] };
   } catch (error) {
     console.error('Turnstile verify error:', error);
-    return false;
+    return { ok: false, codes: ['verify-unavailable'] };
   }
 }
 
@@ -102,7 +102,7 @@ export default async function handler(req, res) {
   }
 
   // Ссылки в имени и сообщении (клиент покажет t.link_error)
-  const urlPattern = /(https?:\/\/|www\.|\bt\.me\/|\btelegram\.me\/|\bwa\.me\/|tg:\/\/)/i;
+  const urlPattern = /(https?:\/\/|www\.|\bt\.me\b|\btelegram\.me\b|\bwa\.me\/|tg:\/\/)/i;
   if (urlPattern.test(cleanName) || urlPattern.test(cleanMessage)) {
     return res.status(400).json({ error: 'Forbidden content' });
   }
@@ -129,11 +129,13 @@ export default async function handler(req, res) {
   // Если TURNSTILE_SECRET_KEY не задан в Vercel, проверка отключена
   const turnstileSecret = process.env.TURNSTILE_SECRET_KEY;
   if (turnstileSecret) {
-    const captchaOk = await verifyTurnstile(turnstileSecret, req.body?.turnstileToken, ip);
-    if (!captchaOk) {
+    const captcha = await verifyTurnstile(turnstileSecret, req.body?.turnstileToken, ip);
+    if (!captcha.ok) {
+      console.warn('Turnstile rejected:', captcha.codes);
+      // Код причины в скобках помогает отладке; коды Cloudflare не секретны
       return res.status(400).json({
         error: 'CaptchaFailed',
-        message: 'Проверка не пройдена. Обновите страницу и попробуйте снова. / Verification failed. Reload the page and try again.'
+        message: `Проверка не пройдена. Обновите страницу и попробуйте снова. / Verification failed. Reload the page and try again. [${captcha.codes.join(', ') || 'unknown'}]`
       });
     }
   } else {
